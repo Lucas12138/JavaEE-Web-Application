@@ -1,0 +1,21 @@
+table {
+    background-color: green;
+    color: white;
+}
+
+tr {
+    background-color: purple;
+    color: white;
+}
+
+td {
+	font-size: large;
+}
+
+input[type=button] {
+	background-color: yellow;
+}
+
+#operations {
+	text-align: center;
+}

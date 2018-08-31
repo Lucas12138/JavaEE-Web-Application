@@ -4,8 +4,33 @@
 		<meta charset="utf-8" >
         <title>CMU Calculator</title>
         <script src="hw1.js"> </script>
+        <link rel="stylesheet" href="hw1.css">
 	</head>
 	<body>
+		<h2>I'm a calculator :)</h2>
+
+		<table>
+            <tr>
+                <td>X: </td>
+                <td colspan="4"><input size="40" id="x" type="text" value="0"></td>
+            </tr>
+            <tr>
+                <td>Y: </td>
+                <td colspan="4"><input size="40" id="y" type="text" value="0"></td>
+            </tr>
+            <tr>
+                <td id="operations" colspan="5">
+                	<input id="plus" type="button" value="+" onClick="calculate('+');">
+                	<input id="minus" type="button" value="-" onClick="calculate('-');">
+                	<input id="multiply" type="button" value="*" onClick="calculate('*');">
+                	<input id="divide" type="button" value="/" onClick="calculate('/');">
+                </td>
+            </tr>
+            <tr>
+                <td>Ans: </td>
+                <td colspan="4"><input id="ans" size="40" type="text" value="0"></td>
+            </tr>
+        </table>
 
 	</body>
 </html>
