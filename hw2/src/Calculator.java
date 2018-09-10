@@ -36,8 +36,16 @@ public class Calculator extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		outputHtml(response, request.getMethod(), null, null, null);
+		String xString = request.getParameter("x");
+		String yString = request.getParameter("y");
+		String operation = request.getParameter("op");
+		// request come from index page
+		if (xString == null && yString == null && operation == null) {
+			outputHtml(response, request.getMethod(), null, null, null);
+		}else {
+			doPost(request, response);
+		}
+		
 	}
 
 	/**
