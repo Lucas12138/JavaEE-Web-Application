@@ -22,6 +22,7 @@ public class Calculator extends HttpServlet {
 	private static final String INVALID_Y_ERROR_MESSAGE = "Y is not a number";
 	private static final String INVALID_OPERATION_ERROR_MESSAGE = "Don't change the operation value!";
 	private static final String INVALID_DIVISION_ERROR_MESSAGE = "Cannot divide by 0";
+	private static final String PARAMETER_NOT_FOUND_ERROR_MESSAGE = "Parameter not found: ";
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -53,6 +54,22 @@ public class Calculator extends HttpServlet {
 		double x = -1;
 		double y = -1;
 		
+		if (xString == null) {
+			messageList.add(PARAMETER_NOT_FOUND_ERROR_MESSAGE + "X");
+		}
+		
+		if (yString == null) {
+			messageList.add(PARAMETER_NOT_FOUND_ERROR_MESSAGE + "Y");
+		}
+		
+		if (operation == null) {
+			messageList.add(PARAMETER_NOT_FOUND_ERROR_MESSAGE + "operation");
+		}
+		
+		if (messageList.size() > 0) {
+			outputHtml(response, request.getMethod(), xString, yString, messageList);
+			return;
+		}
 		
 		try {
 			x = Double.parseDouble(xString);
