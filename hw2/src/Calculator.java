@@ -109,6 +109,14 @@ public class Calculator extends HttpServlet {
 		return calculatedResult;
 	}
 	
+	/**
+	 * Show the calculator page
+	 * @param response
+	 * @param requestMethod request method type (GET/POST)
+	 * @param xString y value
+	 * @param yString x value
+	 * @param messages possible messages (including final result or errors)
+	 */
 	private void outputHtml(HttpServletResponse response, String requestMethod, String xString, String yString, List<String> messages)
 			throws IOException {
 		response.setContentType("text/html");
@@ -121,16 +129,17 @@ public class Calculator extends HttpServlet {
 		out.println("<title>CMU's Best Calculator</title>");
 		out.println("</head>");
 		out.println("<body>");
-		
-		
+	
 		out.println("<div style=\"font-size:22px; height:100px; width:260px; position:fixed; top: 5%; left: 40%;\">");
 		out.println("<h2>I'm a cooler calculator :)</h2>");
+		// check request method
 		if (requestMethod != null) {
 			out.println("<h4 style=\"color:yellow\">" + "Request Method: "+ requestMethod + "</h4>");
 		}
 		out.println("<form action=\"Calculator\" method=\"POST\">");
 		out.println("<table style=\"background-color:green; color:white;\">");
 		
+		// input row for x
 		out.println("<tr style=\"background-color:purple; color:white;\">");
 		out.println("<td>X: </td>");
 		if (xString == null) {
@@ -140,6 +149,7 @@ public class Calculator extends HttpServlet {
 		}
 		out.println("</tr>");
 		
+		// input row for y
 		out.println("<tr style=\"background-color:purple; color:white;\">");
 		out.println("<td>Y: </td>");
 		if (yString == null) {
@@ -149,6 +159,7 @@ public class Calculator extends HttpServlet {
 		}
 		out.println("</tr>");
 		
+		// operations
 		out.println("<tr style=\"background-color:purple; color:white;\">");
 		out.println("<td colspan=\"2\" style=\"text-align:center;\">");
 		out.println("    <input type=\"submit\" name=\"op\" value=\"+\">");
@@ -157,10 +168,10 @@ public class Calculator extends HttpServlet {
 		out.println("    <input type=\"submit\" name=\"op\" value=\"/\">");
 		out.println("</td>");
 		out.println("</tr>");
-		
 		out.println("</table>");
 		out.println("</form>");
 		
+		// display messages
 		if (messages != null) {
 			for (String message : messages) {
 				out.println("<h2 style=\"color:red;\">");
@@ -168,9 +179,7 @@ public class Calculator extends HttpServlet {
 				out.println("</h2>");
 			}
 		}
-		
 		out.println("</div>");
-		
 		out.println("</body>");
 		out.println("</html>");
 	}
