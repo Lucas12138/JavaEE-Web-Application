@@ -44,9 +44,7 @@ public class Welcome extends HttpServlet {
 		out.println("        <hr>");
 		out.println("		 <p>Remote Host Address:" + request.getRemoteAddr() + "</p>");
 		out.println(" 		 <p>Remote Host Name:" + request.getRemoteHost() + "</p>");
-		out.println("  	 	 <form action=\"Calculator\" method=\"GET\">");
-		out.println("    	 	 <input type=\"submit\" value=\"Calculator\" style=\"font-size:27px; padding:20px 32px; color:#b00;\">");
-		out.println("  	 	 </form>");
+		out.println("		 <a href=\"Calculator\" style=\"display:block; text-align:center; color:red; border-top: 1px solid #CCCCCC; border-right: 1px solid #333333; border-bottom: 1px solid #333333; border-left: 1px solid #CCCCCC; text-decoration:none; padding: 10px;\">" + "Calculator" + "</a>");
 		out.println("	 	 </div>");
 		out.println("        <br>");
 		out.println("    </body>");
