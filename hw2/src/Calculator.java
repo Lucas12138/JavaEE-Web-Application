@@ -61,36 +61,35 @@ public class Calculator extends HttpServlet {
 		String operation = request.getParameter("op");
 		double x = -1;
 		double y = -1;
-		
+		// check parameter not found error
 		if (xString == null) {
 			messageList.add(PARAMETER_NOT_FOUND_ERROR_MESSAGE + "X");
 		}
-		
 		if (yString == null) {
 			messageList.add(PARAMETER_NOT_FOUND_ERROR_MESSAGE + "Y");
 		}
-		
 		if (operation == null) {
 			messageList.add(PARAMETER_NOT_FOUND_ERROR_MESSAGE + "operation");
 		}
 		
+		// this means it already has errors here
 		if (messageList.size() > 0) {
 			outputHtml(response, request.getMethod(), xString, yString, messageList);
 			return;
 		}
 		
+		// try to convert to number
 		try {
 			x = Double.parseDouble(xString);
 		} catch (Exception e) {
 			messageList.add(INVALID_X_ERROR_MESSAGE);
 		}
-		
 		try {
 			y = Double.parseDouble(yString);
 		} catch (Exception e) {
 			messageList.add(INVALID_Y_ERROR_MESSAGE);
 		}
-		
+		// divide by 0 error 
 		if (y == 0) {
 			messageList.add(INVALID_DIVISION_ERROR_MESSAGE);
 		}
@@ -106,6 +105,7 @@ public class Calculator extends HttpServlet {
 			return;
 		}
 		
+		// format as 2 decimals and comma separated (e.g. 1,234.56) 
 		DecimalFormat decimalFormat = new DecimalFormat("#,##0.00");
 		
 		messageList.add(decimalFormat.format(x) + " " + operation + " " + decimalFormat.format(y) + " = " + decimalFormat.format(answer));
@@ -127,7 +127,8 @@ public class Calculator extends HttpServlet {
 			case "/": 
 				calculatedResult = x / y;
 			    break;
-			default:  
+			default:
+				// operation invalid error (not in +-*/)
 				messageList.add(INVALID_OPERATION_ERROR_MESSAGE);
 				break;
 		}
