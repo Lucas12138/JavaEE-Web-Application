@@ -1,4 +1,4 @@
-
+<%@page import="java.util.List"%>
 <!doctype html>
 <html lang="en">
 <head>
@@ -48,27 +48,41 @@
 					<h2 style="margin-left: 100px; margin-top: 20px;">Register</h2>
 					<form class="w-75 h-75" style="margin-left: 100px;">
 						<div class="form-inline" style="margin-bottom: 30px;">
-							<label for="usr" style="margin-right: 10px;">First Name: </label> <input type="text"
-								class="form-control" id="usr" style="margin-right: 30px;">
-							
-							<label for="usr" style="margin-right: 10px;">Last Name: </label> <input type="text"
-								class="form-control" id="usr" style="margin-right: 30px;">
+							<label for="usr" style="margin-right: 10px;">First Name:
+							</label> <input type="text" class="form-control" id="usr"
+								style="margin-right: 30px;" value="${form.firstName}"> <label
+								for="usr" style="margin-right: 10px;">Last Name: </label> <input
+								type="text" class="form-control" id="usr"
+								style="margin-right: 30px;" value="${form.lastName}">
 						</div>
 
 						<div class="form-group">
 							<label for="usr">E-mail:</label> <input type="text"
-								class="form-control" id="usr">
+								class="form-control" name="email" value="${form.email}">
 						</div>
 						<div class="form-group">
 							<label for="pwd">Password:</label> <input type="password"
-								class="form-control" id="pwd">
+								class="form-control" name="password">
 						</div>
 						<div class="form-group">
 							<label for="pwd">Confirm Password:</label> <input type="password"
-								class="form-control" id="pwd">
+								class="form-control" name="passwordConfirmed">
 						</div>
-						<a class="btn btn-secondary" href="home.jsp">Submit</a>
+						<input class="btn btn-secondary" type="submit" name="button"
+							value="Register">
 					</form>
+					<%
+						List<String> errors = (List<String>) request.getAttribute("errors");
+						if (errors != null) {
+							for (String error : errors) {
+					%>
+					<h3 style="color: red; margin-left: 100px;">
+						<%=error%>
+					</h3>
+					<%
+						}
+						}
+					%>
 				</div>
 			</div>
 		</div>

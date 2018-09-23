@@ -51,7 +51,7 @@ public class Login extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
         if (session.getAttribute("user") != null) {
-            response.sendRedirect("ToDoList");
+            response.sendRedirect("Home");
             return;
         }
 
@@ -75,21 +75,9 @@ public class Login extends HttpServlet {
                 return;
             }
 
-            if (form.getButton().equals("Register")) {
-                UserBean user = new UserBean();
-                user.setEmail((form.getEmail()));
-                user.setPassword(form.getPassword());
-                userDAO.create(user);
-
-                session.setAttribute("user", user);
-
-                response.sendRedirect("ToDoList");
-                return;
-            }
-
             UserBean user = userDAO.read(form.getEmail());
             if (user == null) {
-                errors.add("No such user");
+                errors.add("Email not found");
                 RequestDispatcher d = request.getRequestDispatcher("login.jsp");
                 d.forward(request, response);
                 return;
@@ -103,7 +91,7 @@ public class Login extends HttpServlet {
             }
 
             session.setAttribute("user", user);
-            response.sendRedirect("ToDoList");
+            response.sendRedirect("Home");
 
         } catch (RollbackException e) {
             errors.add(e.getMessage());

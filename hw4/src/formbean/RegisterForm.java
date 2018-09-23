@@ -22,22 +22,27 @@ public class RegisterForm {
 		lastName = request.getParameter("lastName");
 		button = request.getParameter("button");
 	}
-	
+
 	public String getEmail() {
 		return email;
 	}
+
 	public String getPassword() {
 		return password;
 	}
+
 	public String getPasswordConfirmed() {
 		return passwordConfirmed;
 	}
+
 	public String getFirstName() {
 		return firstName;
 	}
+
 	public String getLastName() {
 		return lastName;
 	}
+
 	public String getButton() {
 		return button;
 	}
@@ -47,10 +52,18 @@ public class RegisterForm {
 
 		if (email == null || email.length() == 0)
 			errors.add("Email is required");
+		
 		if (password == null || password.length() == 0)
 			errors.add("Password is required");
+		
 		if (passwordConfirmed == null || passwordConfirmed.length() == 0)
-			errors.add("Password need to be confirmed");
+			errors.add("Password needs to be confirmed");
+
+		if (firstName == null || firstName.length() == 0)
+			errors.add("First name is required");
+		
+		if (lastName == null || lastName.length() == 0)
+			errors.add("Last name is required");
 		
 		if (button == null)
 			errors.add("Button is required");
@@ -60,12 +73,20 @@ public class RegisterForm {
 
 		if (!button.equals("Register"))
 			errors.add("Invalid button");
-		if (email.matches(".+@.+"))
+		// RFC 5322 standard
+		if (!email.matches("^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$"))
 			errors.add("Invalid email format");
+		
 		if (!passwordConfirmed.equals(password))
 			errors.add("Password confirmed doesn't match the password");
-
+		
+		if (firstName.matches("[a-zA-Z]+"))
+			errors.add("Invalid first name");
+		
+		if (lastName.matches("[a-zA-Z]+"))
+			errors.add("Invalid last name");
+		
 		return errors;
 	}
-	
+
 }

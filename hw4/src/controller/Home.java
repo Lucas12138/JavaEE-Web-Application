@@ -38,7 +38,7 @@ public class Home extends HttpServlet {
     
             cp.setDebugOutput(System.out);  // Print out the generated SQL
 
-            userDAO = new UserDAO(cp, "todolist");
+            userDAO = new UserDAO(cp, "user");
         } catch (DAOException e) {
             throw new ServletException(e);
         }

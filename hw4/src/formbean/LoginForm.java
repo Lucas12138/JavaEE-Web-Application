@@ -43,9 +43,8 @@ public class LoginForm {
 		if (!button.equals("Login"))
 			errors.add("Invalid button");
 		// RFC 5322 standard
-		if (email.matches("^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$"))
+		if (!email.matches("^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$"))
 			errors.add("Invalid email format");
-		// TODO: get user bean from db and validate
 
 		return errors;
 	}

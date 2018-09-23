@@ -1,4 +1,4 @@
-
+<%@page import="java.util.List"%>
 <!doctype html>
 <html lang="en">
 <head>
@@ -45,17 +45,31 @@
 				<h1 class="text-white-50 bg-dark display-1 w-100 h-25 text-center"
 					style="margin-bottom: 0px;">Power Blog</h1>
 				<h2 style="margin-left: 100px; margin-top: 50px;">Login</h2>
-				<form class="w-50" style="margin-left: 100px;">
+				<form class="w-50" style="margin-left: 100px;" action="Login"
+					method="POST">
 					<div class="form-group">
 						<label for="usr">E-mail:</label> <input type="text"
-							class="form-control" id="usr">
+							class="form-control" name="email" value="${form.email}">
 					</div>
 					<div class="form-group">
 						<label for="pwd">Password:</label> <input type="password"
-							class="form-control" id="pwd">
+							class="form-control" name="password">
 					</div>
-					<a class="btn btn-secondary" href="home.jsp">Submit</a>
+					<input class="btn btn-secondary" type="submit" name="button"
+						value="Login">
 				</form>
+				<%
+					List<String> errors = (List<String>) request.getAttribute("errors");
+					if (errors != null) {
+						for (String error : errors) {
+				%>
+				<h3 style="color: red; margin-left: 100px;">
+					<%=error%>
+				</h3>
+				<%
+					}
+					}
+				%>
 			</div>
 		</div>
 	</div>
