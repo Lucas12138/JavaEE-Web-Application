@@ -80,10 +80,10 @@ public class RegisterForm {
 		if (!passwordConfirmed.equals(password))
 			errors.add("Password confirmed doesn't match the password");
 		
-		if (firstName.matches("[a-zA-Z]+"))
+		if (!firstName.matches("[a-zA-Z]+"))
 			errors.add("Invalid first name");
 		
-		if (lastName.matches("[a-zA-Z]+"))
+		if (!lastName.matches("[a-zA-Z]+"))
 			errors.add("Invalid last name");
 		
 		return errors;

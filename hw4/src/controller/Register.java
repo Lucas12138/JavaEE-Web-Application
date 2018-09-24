@@ -69,6 +69,14 @@ public class Register extends HttpServlet {
                 return;
             }
             
+            errors.addAll(form.getValidationErrors());
+            
+            if (errors.size() != 0) {
+                RequestDispatcher d = request.getRequestDispatcher("register.jsp");
+                d.forward(request, response);
+                return;
+            }
+            
             UserBean user = new UserBean();
             user.setEmail(form.getEmail());
             user.setPassword(form.getPassword());
