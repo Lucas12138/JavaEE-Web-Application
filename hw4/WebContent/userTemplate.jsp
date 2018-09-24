@@ -13,12 +13,15 @@
 			UserBean userBean = users[i];
 %>
 <li class="nav-item">
-	<form method="POST" action=<%= userBeanFromSession == null || !userBeanFromSession.getEmail().equals(userBean.getEmail()) ? "Visitor" : "Home" %>>
+	<form method="POST"
+		action=<%=userBeanFromSession == null || !userBeanFromSession.getEmail().equals(userBean.getEmail())
+							? "Visitor"
+							: "Home"%>>
 		<button class="nav-link text-white-50"
 			style="background-color: transparent; border: transparent;"
-			type="submit" name="userIndex" value=<%= String.valueOf(i) %>>
+			type="submit" name="userIndex" value=<%=String.valueOf(i)%>>
 			<%=userBean.getFirstName() + " " + userBean.getLastName()%>
-			</button>
+		</button>
 	</form>
 </li>
 

@@ -89,19 +89,18 @@
 					style="margin-bottom: 0px;">Power Blog</h1>
 				<h2 class="text-center" style="margin-top: 15px;">
 					<%
-					
-					UserBean[] users = (UserBean[]) request.getAttribute("users");
-					String userIndex = request.getParameter("userIndex");
-					String pageTitle = "Somebody's Home Page";
-					if (userIndex != null) {
-						try {
-							int index = Integer.parseInt(userIndex);
-							pageTitle = users[index].getFirstName() + " " +  users[index].getLastName() + "'s Home Page";
-						}catch (Exception e) {
-							pageTitle = "Somebody's Home Page";
+						UserBean[] users = (UserBean[]) request.getAttribute("users");
+						String userIndex = request.getParameter("userIndex");
+						String pageTitle = "Somebody's Home Page";
+						if (userIndex != null) {
+							try {
+								int index = Integer.parseInt(userIndex);
+								pageTitle = users[index].getFirstName() + " " + users[index].getLastName() + "'s Home Page";
+							} catch (Exception e) {
+								pageTitle = "Somebody's Home Page";
+							}
 						}
-					}
-					out.println(pageTitle);
+						out.println(pageTitle);
 					%>
 				</h2>
 				<%
@@ -118,7 +117,6 @@
 			</div>
 		</div>
 	</div>
-
 
 
 	<!-- Optional JavaScript -->

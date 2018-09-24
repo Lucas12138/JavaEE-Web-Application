@@ -54,6 +54,7 @@ public class Home extends HttpServlet {
         HttpSession session = request.getSession();
         UserBean user = (UserBean) session.getAttribute("user");
         if (user == null) {
+        	// connection broken, back to login
             response.sendRedirect("Login");
             return;
         }

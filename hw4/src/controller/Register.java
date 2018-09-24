@@ -24,76 +24,77 @@ import formbean.RegisterForm;
 @WebServlet("/Register")
 public class Register extends HttpServlet {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    private UserDAO userDAO;
+	private UserDAO userDAO;
 
-    public void init() throws ServletException {
-        ServletContext context = getServletContext();
-        String jdbcDriverName = context.getInitParameter("jdbcDriverName");
-        String jdbcURL = context.getInitParameter("jdbcURL");
+	public void init() throws ServletException {
+		ServletContext context = getServletContext();
+		String jdbcDriverName = context.getInitParameter("jdbcDriverName");
+		String jdbcURL = context.getInitParameter("jdbcURL");
 
-        try {
-            ConnectionPool cp = new ConnectionPool(jdbcDriverName, jdbcURL);
-    
-            cp.setDebugOutput(System.out);  // Print out the generated SQL
+		try {
+			ConnectionPool cp = new ConnectionPool(jdbcDriverName, jdbcURL);
 
-            userDAO = new UserDAO(cp, "zizhel_user");
-        } catch (DAOException e) {
-            throw new ServletException(e);
-        }
-    }
+			cp.setDebugOutput(System.out); // Print out the generated SQL
 
-    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        doGet(request, response);
-    }
+			userDAO = new UserDAO(cp, "zizhel_user");
+		} catch (DAOException e) {
+			throw new ServletException(e);
+		}
+	}
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        if (session.getAttribute("user") != null) {
-            response.sendRedirect("Home");
-            return;
-        }
+	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		doGet(request, response);
+	}
 
-        List<String> errors = new ArrayList<String>();
-        request.setAttribute("errors", errors);
+	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		HttpSession session = request.getSession();
+		if (session.getAttribute("user") != null) {
+			response.sendRedirect("Home");
+			return;
+		}
 
-        try {
-        	request.setAttribute("users", userDAO.getUsers());
-        	
-            RegisterForm form = new RegisterForm(request);
-            request.setAttribute("form", form);
+		List<String> errors = new ArrayList<String>();
+		request.setAttribute("errors", errors);
 
-            if ("GET".equals(request.getMethod())) {
-                RequestDispatcher d = request.getRequestDispatcher("register.jsp");
-                d.forward(request, response);
-                return;
-            }
-            
-            errors.addAll(form.getValidationErrors());
-            
-            if (errors.size() != 0) {
-                RequestDispatcher d = request.getRequestDispatcher("register.jsp");
-                d.forward(request, response);
-                return;
-            }
-            
-            UserBean user = new UserBean();
-            user.setEmail(form.getEmail());
-            user.setPassword(form.getPassword());
-            user.setFirstName(form.getFirstName());
-            user.setLastName(form.getLastName());
-            
-            userDAO.create(user);
+		try {
+			request.setAttribute("users", userDAO.getUsers());
 
-            session.setAttribute("user", user);
+			RegisterForm form = new RegisterForm(request);
+			request.setAttribute("form", form);
 
-            response.sendRedirect("Home");
+			// GET request on this page should avoid error messages
+			if ("GET".equals(request.getMethod())) {
+				RequestDispatcher d = request.getRequestDispatcher("register.jsp");
+				d.forward(request, response);
+				return;
+			}
 
-        } catch (RollbackException e) {
-            errors.add(e.getMessage());
-            RequestDispatcher d = request.getRequestDispatcher("error.jsp");
-            d.forward(request, response);
-        }
-    }
+			errors.addAll(form.getValidationErrors());
+			if (errors.size() != 0) {
+				RequestDispatcher d = request.getRequestDispatcher("register.jsp");
+				d.forward(request, response);
+				return;
+			}
+
+			// create new user in db
+			UserBean user = new UserBean();
+			user.setEmail(form.getEmail());
+			user.setPassword(form.getPassword());
+			user.setFirstName(form.getFirstName());
+			user.setLastName(form.getLastName());
+
+			userDAO.create(user);
+
+			// put current user into session
+			session.setAttribute("user", user);
+			response.sendRedirect("Home");
+
+		} catch (RollbackException e) {
+			errors.add(e.getMessage());
+			RequestDispatcher d = request.getRequestDispatcher("register.jsp");
+			d.forward(request, response);
+		}
+	}
 }

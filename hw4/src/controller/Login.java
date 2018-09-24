@@ -24,81 +24,85 @@ import formbean.LoginForm;
 @WebServlet("/Login")
 public class Login extends HttpServlet {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    private UserDAO userDAO;
+	private UserDAO userDAO;
 
-    public void init() throws ServletException {
-        ServletContext context = getServletContext();
-        String jdbcDriverName = context.getInitParameter("jdbcDriverName");
-        String jdbcURL = context.getInitParameter("jdbcURL");
+	public void init() throws ServletException {
+		ServletContext context = getServletContext();
+		String jdbcDriverName = context.getInitParameter("jdbcDriverName");
+		String jdbcURL = context.getInitParameter("jdbcURL");
 
-        try {
-            ConnectionPool cp = new ConnectionPool(jdbcDriverName, jdbcURL);
-    
-            cp.setDebugOutput(System.out);  // Print out the generated SQL
+		try {
+			ConnectionPool cp = new ConnectionPool(jdbcDriverName, jdbcURL);
 
-            userDAO = new UserDAO(cp, "zizhel_user");
-        } catch (DAOException e) {
-            throw new ServletException(e);
-        }
-    }
+			cp.setDebugOutput(System.out); // Print out the generated SQL
 
-    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        doGet(request, response);
-    }
+			userDAO = new UserDAO(cp, "zizhel_user");
+		} catch (DAOException e) {
+			throw new ServletException(e);
+		}
+	}
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        if (session.getAttribute("user") != null) {
-            response.sendRedirect("Home");
-            return;
-        }
+	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		doGet(request, response);
+	}
 
-        List<String> errors = new ArrayList<String>();
-        request.setAttribute("errors", errors);
+	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		HttpSession session = request.getSession();
+		if (session.getAttribute("user") != null) {
+			// user already login
+			response.sendRedirect("Home");
+			return;
+		}
 
-        try {
-        	request.setAttribute("users", userDAO.getUsers());
-        	
-            LoginForm form = new LoginForm(request);
-            request.setAttribute("form", form);
+		List<String> errors = new ArrayList<String>();
+		request.setAttribute("errors", errors);
 
-            if ("GET".equals(request.getMethod())) {
-                RequestDispatcher d = request.getRequestDispatcher("login.jsp");
-                d.forward(request, response);
-                return;
-            }
+		try {
+			request.setAttribute("users", userDAO.getUsers());
 
-            errors.addAll(form.getValidationErrors());
-            if (errors.size() != 0) {
-                RequestDispatcher d = request.getRequestDispatcher("login.jsp");
-                d.forward(request, response);
-                return;
-            }
+			LoginForm form = new LoginForm(request);
+			request.setAttribute("form", form);
 
-            UserBean user = userDAO.read(form.getEmail());
-            if (user == null) {
-                errors.add("Email not found");
-                RequestDispatcher d = request.getRequestDispatcher("login.jsp");
-                d.forward(request, response);
-                return;
-            }
+			// GET request on this page should avoid error messages
+			if ("GET".equals(request.getMethod())) {
+				RequestDispatcher d = request.getRequestDispatcher("login.jsp");
+				d.forward(request, response);
+				return;
+			}
 
-            if (!form.getPassword().equals(user.getPassword())) {
-                errors.add("Incorrect password");
-                RequestDispatcher d = request.getRequestDispatcher("login.jsp");
-                d.forward(request, response);
-                return;
-            }
+			errors.addAll(form.getValidationErrors());
+			if (errors.size() != 0) {
+				RequestDispatcher d = request.getRequestDispatcher("login.jsp");
+				d.forward(request, response);
+				return;
+			}
 
-            session.setAttribute("user", user);
-            response.sendRedirect("Home");
+			UserBean user = userDAO.read(form.getEmail());
+			// validate user info
+			if (user == null) {
+				errors.add("Email not found");
+				RequestDispatcher d = request.getRequestDispatcher("login.jsp");
+				d.forward(request, response);
+				return;
+			}
 
-        } catch (RollbackException e) {
-            errors.add(e.getMessage());
-            RequestDispatcher d = request.getRequestDispatcher("error.jsp");
-            d.forward(request, response);
-        }
-    }
+			if (!form.getPassword().equals(user.getPassword())) {
+				errors.add("Incorrect password");
+				RequestDispatcher d = request.getRequestDispatcher("login.jsp");
+				d.forward(request, response);
+				return;
+			}
+
+			// login success
+			session.setAttribute("user", user);
+			response.sendRedirect("Home");
+
+		} catch (RollbackException e) {
+			errors.add(e.getMessage());
+			RequestDispatcher d = request.getRequestDispatcher("error.jsp");
+			d.forward(request, response);
+		}
+	}
 }
