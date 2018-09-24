@@ -32,6 +32,7 @@
 					width="400" height="100">
 				<nav class="navbar bg-dark h-75">
 					<ul class="navbar-nav">
+						<p class="text-white">Hi, visitor</p>
 						<li class="nav-item">
 							<form method="GET" action="Login">
 								<button class="nav-link text-white-50"

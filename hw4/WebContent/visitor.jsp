@@ -42,30 +42,68 @@
 								}
 							%>
 						</p>
-						<li class="nav-item"><a class="nav-link text-white-50"
-							href="home.jsp">Home</a></li>
-						<li class="nav-item"><a class="nav-link text-white-50"
-							href="login.jsp">Logout</a></li>
+						<%
+							if (userBean == null) {
+						%>
+						<li class="nav-item">
+							<form method="GET" action="Login">
+								<button class="nav-link text-white-50"
+									style="background-color: transparent; border: transparent;"
+									type="submit">Login</button>
+							</form>
+						</li>
+						<li class="nav-item">
+							<form method="GET" action="Register">
+								<button class="nav-link text-white-50"
+									style="background-color: transparent; border: transparent;"
+									type="submit">Register</button>
+							</form>
+						</li>
+						<%
+							} else {
+						%>
+						<li class="nav-item">
+							<form method="POST" action="Home">
+								<button class="nav-link text-white-50"
+									style="background-color: transparent; border: transparent;"
+									type="submit">Home</button>
+							</form>
+						</li>
+						<li class="nav-item">
+							<form method="POST" action="Logout">
+								<button class="nav-link text-white-50"
+									style="background-color: transparent; border: transparent;"
+									type="submit">Logout</button>
+							</form>
+						</li>
+						<%
+							}
+						%>
 						<hr>
-						<jsp:include page="userTemplateLoginStatus.html" />
+						<jsp:include page="userTemplate.jsp" />
 					</ul>
 				</nav>
 			</div>
 			<div class="col-9" style="padding-left: 0px;">
 				<h1 class="text-white-50 bg-dark display-1 w-100 h-25 text-center"
 					style="margin-bottom: 0px;">Power Blog</h1>
-				<%
-					String name = request.getParameter("name");
-					if (name == null) {
-				%>
-				<h2 class="text-center" style="margin-top: 15px;">Somebody's
-					Home Page</h2>
-				<%
-					} else {
-						out.println("<h2 class=\"text-center\" style=\"margin-top: 15px;\">" + name + "'s Home Page</h2>");
+				<h2 class="text-center" style="margin-top: 15px;">
+					<%
+					
+					UserBean[] users = (UserBean[]) request.getAttribute("users");
+					String userIndex = request.getParameter("userIndex");
+					String pageTitle = "Somebody's Home Page";
+					if (userIndex != null) {
+						try {
+							int index = Integer.parseInt(userIndex);
+							pageTitle = users[index].getFirstName() + " " +  users[index].getLastName() + "'s Home Page";
+						}catch (Exception e) {
+							pageTitle = "Somebody's Home Page";
+						}
 					}
-				%>
-
+					out.println(pageTitle);
+					%>
+				</h2>
 				<%
 					if (userBean != null) {
 				%>

@@ -50,12 +50,6 @@ public class Visitor extends HttpServlet {
 
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        UserBean user = (UserBean) session.getAttribute("user");
-        if (user == null) {
-            response.sendRedirect("Login");
-            return;
-        }
 
         List<String> errors = new ArrayList<String>();
         request.setAttribute("errors", errors);
@@ -63,11 +57,11 @@ public class Visitor extends HttpServlet {
         try {
             request.setAttribute("users", userDAO.getUsers());
             
-            RequestDispatcher d = request.getRequestDispatcher("home.jsp");
+            RequestDispatcher d = request.getRequestDispatcher("visitor.jsp");
             d.forward(request, response);
         } catch (RollbackException e) {
             errors.add(e.getMessage());
-            RequestDispatcher d = request.getRequestDispatcher("home.jsp");
+            RequestDispatcher d = request.getRequestDispatcher("visitor.jsp");
             d.forward(request, response);
         }
     }
