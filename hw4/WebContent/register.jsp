@@ -32,12 +32,22 @@
 					width="400" height="100">
 				<nav class="navbar bg-dark h-75">
 					<ul class="navbar-nav">
-						<li class="nav-item"><a class="nav-link text-white-50"
-							href="login.jsp">Login</a></li>
-						<li class="nav-item"><a class="nav-link text-white-50"
-							href="register.jsp">Register</a></li>
+						<li class="nav-item">
+							<form method="GET" action="Login">
+								<button class="nav-link text-white-50"
+									style="background-color: transparent; border: transparent;"
+									type="submit">Login</button>
+							</form>
+						</li>
+						<li class="nav-item">
+							<form method="GET" action="Register">
+								<button class="nav-link text-white-50"
+									style="background-color: transparent; border: transparent;"
+									type="submit">Register</button>
+							</form>
+						</li>
 						<hr>
-						<jsp:include page="userTemplate.html" />
+						<jsp:include page="userTemplate.jsp" />
 					</ul>
 				</nav>
 			</div>
@@ -49,10 +59,9 @@
 					<form class="w-75 h-75" style="margin-left: 100px;"
 						action="Register" method="POST">
 						<div class="form-inline" style="margin-bottom: 30px;">
-							<label style="margin-right: 10px;">First Name:
-							</label> <input type="text" class="form-control"
-								style="margin-right: 30px;" name="firstName"
-								value="${form.firstName}"> <label
+							<label style="margin-right: 10px;">First Name: </label> <input
+								type="text" class="form-control" style="margin-right: 30px;"
+								name="firstName" value="${form.firstName}"> <label
 								style="margin-right: 10px;">Last Name: </label> <input
 								type="text" class="form-control" style="margin-right: 30px;"
 								name="lastName" value="${form.lastName}">

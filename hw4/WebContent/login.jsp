@@ -32,12 +32,22 @@
 					width="400" height="100">
 				<nav class="navbar bg-dark h-75">
 					<ul class="navbar-nav">
-						<li class="nav-item"><a class="nav-link text-white-50"
-							href="login.jsp">Login</a></li>
-						<li class="nav-item"><a class="nav-link text-white-50"
-							href="register.jsp">Register</a></li>
+						<li class="nav-item">
+							<form method="GET" action="Login">
+								<button class="nav-link text-white-50"
+									style="background-color: transparent; border: transparent;"
+									type="submit">Login</button>
+							</form>
+						</li>
+						<li class="nav-item">
+							<form method="GET" action="Register">
+								<button class="nav-link text-white-50"
+									style="background-color: transparent; border: transparent;"
+									type="submit">Register</button>
+							</form>
+						</li>
 						<hr>
-						<jsp:include page="userTemplate.html" />
+						<jsp:include page="userTemplate.jsp" />
 					</ul>
 				</nav>
 			</div>

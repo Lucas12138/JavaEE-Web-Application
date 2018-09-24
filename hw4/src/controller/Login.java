@@ -59,6 +59,8 @@ public class Login extends HttpServlet {
         request.setAttribute("errors", errors);
 
         try {
+        	request.setAttribute("users", userDAO.getUsers());
+        	
             LoginForm form = new LoginForm(request);
             request.setAttribute("form", form);
 

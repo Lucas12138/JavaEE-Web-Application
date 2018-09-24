@@ -37,7 +37,7 @@
 						<li class="nav-item"><a class="nav-link text-white-50"
 							href="register.jsp">Register</a></li>
 						<hr>
-						<jsp:include page="userTemplate.html" />
+						<jsp:include page="userTemplate.jsp" />
 					</ul>
 				</nav>
 			</div>

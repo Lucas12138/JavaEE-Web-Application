@@ -63,7 +63,7 @@ public class Home extends HttpServlet {
 
         try {
             request.setAttribute("users", userDAO.getUsers());
-
+            
             RequestDispatcher d = request.getRequestDispatcher("home.jsp");
             d.forward(request, response);
         } catch (RollbackException e) {

@@ -19,7 +19,6 @@ import org.genericdao.RollbackException;
 
 import dao.UserDAO;
 import databean.UserBean;
-import formbean.LoginForm;
 import formbean.RegisterForm;
 
 @WebServlet("/Register")
@@ -60,6 +59,8 @@ public class Register extends HttpServlet {
         request.setAttribute("errors", errors);
 
         try {
+        	request.setAttribute("users", userDAO.getUsers());
+        	
             RegisterForm form = new RegisterForm(request);
             request.setAttribute("form", form);
 
