@@ -38,67 +38,45 @@
 								if (userBean != null) {
 									out.print("Welcome, " + userBean.getFirstName() + " " + userBean.getLastName());
 								} else {
-									out.print("???");
+									out.print("Hi, visitor");
 								}
 							%>
 						</p>
 						<li class="nav-item"><a class="nav-link text-white-50"
-							href="#">Home</a></li>
-						<li class="nav-item">
-							<form method="POST" action="Logout">
-								<button class="nav-link text-white-50"
-									style="background-color: transparent; border: transparent;"
-									type="submit">Logout</button>
-							</form>
-						</li>
+							href="home.jsp">Home</a></li>
+						<li class="nav-item"><a class="nav-link text-white-50"
+							href="login.jsp">Logout</a></li>
 						<hr>
-						<jsp:include page="userTemplate.jsp" />
+						<jsp:include page="userTemplateLoginStatus.html" />
 					</ul>
 				</nav>
 			</div>
 			<div class="col-9" style="padding-left: 0px;">
 				<h1 class="text-white-50 bg-dark display-1 w-100 h-25 text-center"
 					style="margin-bottom: 0px;">Power Blog</h1>
-				<h2 class="text-center" style="margin-top: 15px;">
-					<%
-						if (userBean != null) {
-							out.print(userBean.getFirstName() + " " + userBean.getLastName() + "'s Home Page");
-						} else {
-							out.print("???");
-						}
-					%>
-				</h2>
-				<div class="row" style="margin-left: 20px; margin-bottom: 5px;">
-					<button type="button" class="close" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-					J2EE is a good course! -- 9/15/2018 11:12am
-				</div>
-				<div class="row" style="margin-left: 40px; margin-bottom: 10px;">
-					<button type="button" class="close" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-					Comment by Donald Trump - We need more money to build the wall.
-					9/15/2018 12:12am
-				</div>
-				<div class="row" style="margin-left: 20px; margin-bottom: 5px;">
-					<button type="button" class="close" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-					Hello world! 9/15/2018 13:11am
-				</div>
-				<div class="row" style="margin-left: 40px; margin-bottom: 10px;">
-					<button type="button" class="close" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-					Comment by Lucas Liu - Let's get it started! 9/15/2018 14:01am
-				</div>
+				<%
+					String name = request.getParameter("name");
+					if (name == null) {
+				%>
+				<h2 class="text-center" style="margin-top: 15px;">Somebody's
+					Home Page</h2>
+				<%
+					} else {
+						out.println("<h2 class=\"text-center\" style=\"margin-top: 15px;\">" + name + "'s Home Page</h2>");
+					}
+				%>
 
-				<div style="margin-left: 40px; margin-top: 30px;">
-					<label for="comment">New Post:</label>
-					<textarea class="form-control w-50" rows="5" id="comment"></textarea>
-					<a class="btn btn-secondary text-white" style="margin-top: 20px;">Submit</a>
-				</div>
+				<%
+					if (userBean != null) {
+				%>
+				<jsp:include page="visitorLoginStatus.jsp" />
+				<%
+					} else {
+				%>
+				<jsp:include page="visitorLogoutStatus.jsp" />
+				<%
+					}
+				%>
 			</div>
 		</div>
 	</div>
