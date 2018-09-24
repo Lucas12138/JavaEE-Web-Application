@@ -37,7 +37,7 @@ public class Visitor extends HttpServlet {
     
             cp.setDebugOutput(System.out);  // Print out the generated SQL
 
-            userDAO = new UserDAO(cp, "user");
+            userDAO = new UserDAO(cp, "zizhel_user");
         } catch (DAOException e) {
             throw new ServletException(e);
         }
