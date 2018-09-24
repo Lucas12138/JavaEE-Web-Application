@@ -47,6 +47,7 @@ public class UserBean implements Comparable<UserBean> {
 	 * Use this method, to keep the names on the navbar nicer
 	 */
 	public int compareTo(UserBean user) {
+		
 		// compare first name first, if same, compare last name
 		int compareRes = this.getFirstName().compareTo(user.getFirstName());
 		if (compareRes != 0) {
