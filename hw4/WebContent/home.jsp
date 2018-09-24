@@ -35,8 +35,12 @@
 						<p class="text-white">Welcome, Lucas Liu</p>
 						<li class="nav-item"><a class="nav-link text-white-50"
 							href="#">Home</a></li>
-						<li class="nav-item"><a class="nav-link text-white-50"
-							href="login.jsp">Logout</a></li>
+						<li class="nav-item">
+							<form method="POST"
+								action="Logout">
+								<button class="nav-link text-white-50" style="background-color: transparent; border: transparent;"  type="submit">Logout</button>
+							</form>
+						</li>
 						<hr>
 						<jsp:include page="userTemplateLoginStatus.html" />
 					</ul>

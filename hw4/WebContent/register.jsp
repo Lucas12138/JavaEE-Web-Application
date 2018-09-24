@@ -46,14 +46,16 @@
 					style="margin-bottom: 0px;">Power Blog</h1>
 				<div class="pre-scrollable" style="max-height: 500px;">
 					<h2 style="margin-left: 100px; margin-top: 20px;">Register</h2>
-					<form class="w-75 h-75" style="margin-left: 100px;">
+					<form class="w-75 h-75" style="margin-left: 100px;"
+						action="Register" method="POST">
 						<div class="form-inline" style="margin-bottom: 30px;">
-							<label for="usr" style="margin-right: 10px;">First Name:
-							</label> <input type="text" class="form-control" id="usr"
-								style="margin-right: 30px;" value="${form.firstName}"> <label
-								for="usr" style="margin-right: 10px;">Last Name: </label> <input
-								type="text" class="form-control" id="usr"
-								style="margin-right: 30px;" value="${form.lastName}">
+							<label style="margin-right: 10px;">First Name:
+							</label> <input type="text" class="form-control"
+								style="margin-right: 30px;" name="firstName"
+								value="${form.firstName}"> <label
+								style="margin-right: 10px;">Last Name: </label> <input
+								type="text" class="form-control" style="margin-right: 30px;"
+								name="lastName" value="${form.lastName}">
 						</div>
 
 						<div class="form-group">
