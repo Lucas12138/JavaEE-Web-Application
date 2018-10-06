@@ -43,14 +43,14 @@
 							%>
 						</p>
 						<li class="nav-item">
-							<form method="POST" action="Home">
+							<form method="POST" action="home.do">
 								<button class="nav-link text-white-50"
 									style="background-color: transparent; border: transparent;"
 									type="submit">Home</button>
 							</form>
 						</li>
 						<li class="nav-item">
-							<form method="POST" action="Logout">
+							<form method="POST" action="logout.do">
 								<button class="nav-link text-white-50"
 									style="background-color: transparent; border: transparent;"
 									type="submit">Logout</button>

@@ -24,7 +24,6 @@ public class Controller extends HttpServlet {
         Action.add(new LogoutAction(model));
         Action.add(new HomeAction(model));
         Action.add(new VisitorAction(model));
-        
     }
 
     public void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -58,9 +57,12 @@ public class Controller extends HttpServlet {
         }
         
         // If the user hasn't logged in, login is the only option
-        // Note in this example, register is in the login action.
         if (action.equals("login.do")) {
             return Action.perform("login.do", request);
+        }
+        
+        if (action.equals("register.do")) {
+        	return Action.perform("register.do", request);
         }
         
         // The not-logged user is trying to execute an action other

@@ -33,7 +33,7 @@ public class HomeAction extends Action {
 	}
 
 	public String getName() {
-		return "register.do";
+		return "home.do";
 	}
 
 	@Override

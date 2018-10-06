@@ -15,8 +15,8 @@
 <li class="nav-item">
 	<form method="POST"
 		action=<%=userBeanFromSession == null || !userBeanFromSession.getEmail().equals(userBean.getEmail())
-							? "Visitor"
-							: "Home"%>>
+							? "visitor.do"
+							: "home.do"%>>
 		<button class="nav-link text-white-50"
 			style="background-color: transparent; border: transparent;"
 			type="submit" name="userIndex" value=<%=String.valueOf(i)%>>

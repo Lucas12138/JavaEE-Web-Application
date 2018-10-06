@@ -46,14 +46,14 @@
 							if (userBean == null) {
 						%>
 						<li class="nav-item">
-							<form method="GET" action="Login">
+							<form method="GET" action="login.do">
 								<button class="nav-link text-white-50"
 									style="background-color: transparent; border: transparent;"
 									type="submit">Login</button>
 							</form>
 						</li>
 						<li class="nav-item">
-							<form method="GET" action="Register">
+							<form method="GET" action="register.do">
 								<button class="nav-link text-white-50"
 									style="background-color: transparent; border: transparent;"
 									type="submit">Register</button>
@@ -63,14 +63,14 @@
 							} else {
 						%>
 						<li class="nav-item">
-							<form method="POST" action="Home">
+							<form method="POST" action="home.do">
 								<button class="nav-link text-white-50"
 									style="background-color: transparent; border: transparent;"
 									type="submit">Home</button>
 							</form>
 						</li>
 						<li class="nav-item">
-							<form method="POST" action="Logout">
+							<form method="POST" action="logout.do">
 								<button class="nav-link text-white-50"
 									style="background-color: transparent; border: transparent;"
 									type="submit">Logout</button>

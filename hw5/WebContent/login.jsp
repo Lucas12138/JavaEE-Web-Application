@@ -34,14 +34,14 @@
 					<ul class="navbar-nav">
 						<p class="text-white">Hi, visitor</p>
 						<li class="nav-item">
-							<form method="GET" action="Login">
+							<form method="GET" action="login.do">
 								<button class="nav-link text-white-50"
 									style="background-color: transparent; border: transparent;"
 									type="submit">Login</button>
 							</form>
 						</li>
 						<li class="nav-item">
-							<form method="GET" action="Register">
+							<form method="GET" action="register.do">
 								<button class="nav-link text-white-50"
 									style="background-color: transparent; border: transparent;"
 									type="submit">Register</button>
@@ -56,7 +56,7 @@
 				<h1 class="text-white-50 bg-dark display-1 w-100 h-25 text-center"
 					style="margin-bottom: 0px;">Power Blog</h1>
 				<h2 style="margin-left: 100px; margin-top: 50px;">Login</h2>
-				<form class="w-50" style="margin-left: 100px;" action="Login"
+				<form class="w-50" style="margin-left: 100px;" action="login.do"
 					method="POST">
 					<div class="form-group">
 						<label for="usr">E-mail:</label> <input type="text"

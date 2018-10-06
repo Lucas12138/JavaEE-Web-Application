@@ -34,14 +34,14 @@
 					<ul class="navbar-nav">
 						<p class="text-white">Hi, visitor</p>
 						<li class="nav-item">
-							<form method="GET" action="Login">
+							<form method="GET" action="login.do">
 								<button class="nav-link text-white-50"
 									style="background-color: transparent; border: transparent;"
 									type="submit">Login</button>
 							</form>
 						</li>
 						<li class="nav-item">
-							<form method="GET" action="Register">
+							<form method="GET" action="register.do">
 								<button class="nav-link text-white-50"
 									style="background-color: transparent; border: transparent;"
 									type="submit">Register</button>
@@ -58,7 +58,7 @@
 				<div class="pre-scrollable" style="max-height: 500px;">
 					<h2 style="margin-left: 100px; margin-top: 20px;">Register</h2>
 					<form class="w-75 h-75" style="margin-left: 100px;"
-						action="Register" method="POST">
+						action="register.do" method="POST">
 						<div class="form-inline" style="margin-bottom: 30px;">
 							<label style="margin-right: 10px;">First Name: </label> <input
 								type="text" class="form-control" style="margin-right: 30px;"
