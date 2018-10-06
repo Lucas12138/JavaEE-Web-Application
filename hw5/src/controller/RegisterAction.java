@@ -17,42 +17,30 @@ import org.genericdao.ConnectionPool;
 import org.genericdao.DAOException;
 import org.genericdao.RollbackException;
 
-import dao.UserDAO;
 import databean.UserBean;
 import formbean.RegisterForm;
+import model.Model;
+import model.UserDAO;
 
-@WebServlet("/Register")
-public class Register extends HttpServlet {
+public class RegisterAction extends Action {
 
 	private static final long serialVersionUID = 1L;
 
 	private UserDAO userDAO;
 
-	public void init() throws ServletException {
-		ServletContext context = getServletContext();
-		String jdbcDriverName = context.getInitParameter("jdbcDriverName");
-		String jdbcURL = context.getInitParameter("jdbcURL");
-
-		try {
-			ConnectionPool cp = new ConnectionPool(jdbcDriverName, jdbcURL);
-
-			cp.setDebugOutput(System.out); // Print out the generated SQL
-
-			userDAO = new UserDAO(cp, "zizhel_user");
-		} catch (DAOException e) {
-			throw new ServletException(e);
-		}
+	public RegisterAction(Model model) {
+		userDAO = model.getUserDAO();
 	}
 
-	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		doGet(request, response);
+	public String getName() {
+		return "register.do";
 	}
-
-	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	
+	@Override
+	public String performGet(HttpServletRequest request) {
 		HttpSession session = request.getSession();
 		if (session.getAttribute("user") != null) {
-			response.sendRedirect("Home");
-			return;
+			return "home.do";
 		}
 
 		List<String> errors = new ArrayList<String>();
@@ -65,17 +53,13 @@ public class Register extends HttpServlet {
 			request.setAttribute("form", form);
 
 			// GET request on this page should avoid error messages
-			if ("GET".equals(request.getMethod())) {
-				RequestDispatcher d = request.getRequestDispatcher("register.jsp");
-				d.forward(request, response);
-				return;
+			if ("GET".equals(request.getMethod())) {				
+				return "register.jsp";
 			}
 
 			errors.addAll(form.getValidationErrors());
 			if (errors.size() != 0) {
-				RequestDispatcher d = request.getRequestDispatcher("register.jsp");
-				d.forward(request, response);
-				return;
+				return "register.jsp";
 			}
 
 			// create new user in db
@@ -89,12 +73,17 @@ public class Register extends HttpServlet {
 
 			// put current user into session
 			session.setAttribute("user", user);
-			response.sendRedirect("Home");
+			return "home.do";
 
 		} catch (RollbackException e) {
 			errors.add(e.getMessage());
-			RequestDispatcher d = request.getRequestDispatcher("register.jsp");
-			d.forward(request, response);
+			return "register.jsp";
 		}
+	}
+	
+	
+	@Override
+	public String performPost(HttpServletRequest request) {
+		return performGet(request);
 	}
 }
