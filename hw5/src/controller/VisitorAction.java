@@ -45,11 +45,12 @@ public class VisitorAction extends Action {
             UserBean[] users = userDAO.getUsers();
         	request.setAttribute("users", users);
         	
-        	String userIndex = request.getParameter("userIndex");
-        	UserBean userSelected = users[Integer.parseInt(userIndex)];
-        	
-            request.setAttribute("users", users);
-            request.setAttribute("userSelected", userSelected);
+        	String userEmail = request.getParameter("userEmail");
+			if (userEmail != null) {
+				UserBean userSelected = userDAO.read(userEmail);
+				request.setAttribute("userSelected", userSelected);
+			}
+            
             return "visitor.jsp";
         } catch (RollbackException e) {
             errors.add(e.getMessage());

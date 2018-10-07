@@ -124,9 +124,9 @@ public class HomeAction extends Action {
 			} 
 			request.setAttribute("emailToFullNameMap", emailToFullNameMap);
 			
-			String userIndex = request.getParameter("userIndex");
-			if (userIndex != null) {
-				UserBean userSelected = users[Integer.parseInt(userIndex)];
+			String userEmail = request.getParameter("userEmail");
+			if (userEmail != null) {
+				UserBean userSelected = userDAO.read(userEmail);
 				request.setAttribute("userSelected", userSelected);
 			}
 			

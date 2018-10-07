@@ -18,9 +18,10 @@
 						home.do
 					</c:otherwise>
 				</c:choose>>
+				<input type="hidden" name="userEmail" value="${ usersIter.email }" />
 				<button class="nav-link text-white-50"
 					style="background-color: transparent; border: transparent;"
-					type="submit" name="userIndex" value=${loop.index}>
+					type="submit">
 					${usersIter.firstName} ${usersIter.lastName}</button>
 			</form>
 		</li>
