@@ -1,5 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"  %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <!doctype html>
 <html lang="en">
 <head>
@@ -65,52 +65,94 @@
 			<div class="col-9" style="padding-left: 0px;">
 				<h1 class="text-white-50 bg-dark display-1 w-100 h-25 text-center"
 					style="margin-bottom: 0px;">Power Blog</h1>
-				<h2 class="text-center" style="margin-top: 15px;">
-					<c:choose>
-						<c:when test="${ (empty user) }">
+				<!-- <div style="overflow:auto; width:1000px;height:500px;"> -->
+				<div style="position: fixed; overflow: auto; top: 25%; bottom: 10px; width: 75%;">
+					<h2 class="text-center" style="margin-top: 15px;">
+						<c:choose>
+							<c:when test="${ (empty user) }">
 							???
 						</c:when>
-						<c:otherwise>
+							<c:otherwise>
 							${user.firstName} ${user.lastName} 's Home Page
 						</c:otherwise>
-					</c:choose>
+						</c:choose>
 
-				</h2>
-				
-				<!-- JSTL -->
-				<c:if test="${!(empty posts)}">
-					<c:forEach var="post" items="${posts}">
-						<div class="row" style="margin-left: 20px; margin-bottom: 5px;">
-							<form class="delete-form" method="POST" action="delete.do">
-			                    <input type="hidden" name="postId" value="${ post.postId }" />
-			                    <button type="submit" class="close" aria-label="Close">
-			                    	<span aria-hidden="true">&times;</span>
-			                    </button>
-			                </form>
-							<!-- sanitize the content -->
-							<c:out value="${post.content}"></c:out> -- 
-							<fmt:formatDate value="${post.postDatetime}" type="both" pattern="MMM-dd-yyyy  h:mm aa"/>
-						</div>
-					</c:forEach>
-				</c:if>
-				
+					</h2>
 
-				<div style="margin-left: 40px; margin-top: 30px;">
-					<label for="comment">New Post:</label>
-					<form method="POST" action="home.do">
-					<textarea class="form-control w-50" rows="5" name="post" value="${form.postContent}"></textarea>
-					<input class="btn btn-secondary" type="submit" name="button" style="margin-top: 20px;"
-						value="Submit">
-					<form>
+					<!-- JSTL -->
+					<c:if test="${!(empty posts)}">
+						<c:forEach var="post" items="${posts}">
+							<div class="row" style="margin-left: 20px; margin-bottom: 5px;">
+								<form class="delete-form" method="POST" action="delete.do">
+									<input type="hidden" name="postId" value="${ post.postId }" />
+									<button type="submit" class="close" aria-label="Close">
+										<span aria-hidden="true">&times;</span>
+									</button>
+								</form>
+								<!-- sanitize the content -->
+								<c:out value="${post.content}"></c:out>
+								--
+								<fmt:formatDate value="${post.postDatetime}" type="both"
+									pattern="MMM-dd-yyyy  h:mm aa" />
+							</div>
+
+
+							<c:if test="${!(empty postIdToCommentsMap)}">
+								<c:forEach var="comment"
+									items="${postIdToCommentsMap[post.postId]}">
+									<div class="row"
+										style="margin-left: 40px; margin-bottom: 10px;">
+										<c:if test="${comment.email == user.email}">
+											<form class="delete-form" method="POST" action="delete.do">
+												<input type="hidden" name="commentId"
+													value="${ comment.commentId }" />
+												<button type="submit" class="close" aria-label="Close">
+													<span aria-hidden="true">&times;</span>
+												</button>
+											</form>
+										</c:if>
+										Comment by ${emailToFullNameMap[comment.email]} -
+										<!-- sanitize the content -->
+										<c:out value="${comment.content}"></c:out>
+										--
+										<fmt:formatDate value="${comment.commentDatetime}" type="both"
+											pattern="MMM-dd-yyyy  h:mm aa" />
+									</div>
+								</c:forEach>
+
+							</c:if>
+
+							<div class="form-inline"
+								style="margin-left: 40px; margin-bottom: 10px;">
+								<form method="POST" action="home.do">
+									<input type="hidden" name="postId" value="${ post.postId }" />
+									<input type="text" class="form-control w-50" name="comment"
+										value=""> <input class="btn btn-secondary"
+										type="submit" name="button" style="margin-left: 10px;"
+										value="Comment">
+								</form>
+							</div>
+						</c:forEach>
+					</c:if>
+
+
+					<div style="margin-left: 40px; margin-top: 30px;">
+						<label>New Post:</label>
+						<form method="POST" action="home.do">
+							<textarea class="form-control w-50" rows="5" name="post"
+								value="${postForm.postContent}"></textarea>
+							<input class="btn btn-secondary" type="submit" name="button"
+								style="margin-top: 20px;" value="Submit">
+						</form>
+					</div>
+
+					<!-- JSTL -->
+					<c:if test="${!(empty errors)}">
+						<c:forEach var="error" items="${errors}">
+							<h3 style="color: red; margin-left: 40px;">${error}</h3>
+						</c:forEach>
+					</c:if>
 				</div>
-				
-				<!-- JSTL -->
-				<c:if test="${!(empty errors)}">
-					<c:forEach var="error" items="${errors}">
-						<h3 style="color: red; margin-left: 40px;">${error}</h3>
-					</c:forEach>
-				</c:if>
-				
 			</div>
 		</div>
 	</div>

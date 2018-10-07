@@ -3,7 +3,9 @@ package controller;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
@@ -18,9 +20,12 @@ import org.genericdao.ConnectionPool;
 import org.genericdao.DAOException;
 import org.genericdao.RollbackException;
 
+import databean.CommentBean;
 import databean.PostBean;
 import databean.UserBean;
+import formbean.CommentFormBean;
 import formbean.PostFormBean;
+import model.CommentDAO;
 import model.Model;
 import model.PostDAO;
 import model.UserDAO;
@@ -31,10 +36,12 @@ public class HomeAction extends Action {
 
 	private UserDAO userDAO;
 	private PostDAO postDAO;
-
+	private CommentDAO commentDAO;
+	
 	public HomeAction(Model model) {
 		userDAO = model.getUserDAO();
 		postDAO = model.getPostDAO();
+		commentDAO = model.getCommentDAO();
 	}
 
 	@Override
@@ -56,19 +63,42 @@ public class HomeAction extends Action {
 
 		try {
 			// check if there's an incoming new post request
-			PostFormBean form = new PostFormBean(request);
-			request.setAttribute("form", form);
+			PostFormBean postForm = new PostFormBean(request);
+			request.setAttribute("postForm", postForm);
 
-			if (form.isNewPost()) {
-				errors.addAll(form.getValidationErrors());
+			if (postForm.isNewPost()) {
+				errors.addAll(postForm.getValidationErrors());
 				// do this only if no errors
 				if (errors.size() == 0) {
 					// create new post in db
 					PostBean post = new PostBean();
 					post.setEmail(user.getEmail());
-					post.setContent(form.getPostContent());
+					post.setContent(postForm.getPostContent());
 					post.setPostDatetime(new Date());
 					postDAO.create(post);
+				}
+			}
+			
+			// check if there's an incoming new comment request
+			CommentFormBean commentForm = new CommentFormBean(request);
+			
+			if (commentForm.isNewComment()) {
+				errors.addAll(commentForm.getValidationErrors());
+				String postIdStr = request.getParameter("postId");
+				if (postIdStr == null) {
+					errors.add("The post you want to comment on is somehow missing");
+				}
+				long postId = Long.parseLong(postIdStr);
+				
+				// do this only if no errors
+				if (errors.size() == 0) {
+					// create new comment in db
+					CommentBean commentBean = new CommentBean();
+					commentBean.setCommentDatetime(new Date());
+					commentBean.setContent(commentForm.getCommentContent());
+					commentBean.setEmail(user.getEmail());
+					commentBean.setPostId(postId);
+					commentDAO.create(commentBean);
 				}
 			}
 			
@@ -78,6 +108,22 @@ public class HomeAction extends Action {
 			UserBean[] users = userDAO.getUsers();
 			request.setAttribute("users", users);
 
+			// map for adding comments under each related post
+			Map<Long, CommentBean[]> postIdToCommentsMap = new HashMap<>();
+			for (PostBean postsFromUser : posts) {
+				long postIdFromUser = postsFromUser.getPostId();
+				CommentBean[] commentsFromPostId = commentDAO.getCommentsFromPost(postIdFromUser);
+				postIdToCommentsMap.put(postIdFromUser, commentsFromPostId);
+			} 
+			request.setAttribute("postIdToCommentsMap", postIdToCommentsMap);
+			
+			// map email to user full name, easier for comment creation
+			Map<String, String> emailToFullNameMap = new HashMap<>();
+			for (UserBean userExisting : users) {
+				emailToFullNameMap.put(userExisting.getEmail(), userExisting.getFirstName() + " " + userExisting.getLastName());
+			} 
+			request.setAttribute("emailToFullNameMap", emailToFullNameMap);
+			
 			String userIndex = request.getParameter("userIndex");
 			if (userIndex != null) {
 				UserBean userSelected = users[Integer.parseInt(userIndex)];

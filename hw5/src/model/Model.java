@@ -10,7 +10,8 @@ import org.genericdao.DAOException;
 public class Model {
 	private UserDAO userDAO;
 	private PostDAO postDAO;
-
+	private CommentDAO commentDAO;
+	
 	public Model(ServletConfig config) throws ServletException {
 		try {
 			String jdbcDriver = config.getInitParameter("jdbcDriverName");
@@ -20,6 +21,7 @@ public class Model {
 
 			userDAO = new UserDAO(pool, "zizhel_user");
 			postDAO = new PostDAO(pool, "zizhel_post");
+			commentDAO = new CommentDAO(pool, "zizhel_comment");
 		} catch (DAOException e) {
 			throw new ServletException(e);
 		}
@@ -31,5 +33,9 @@ public class Model {
 
 	public PostDAO getPostDAO() {
 		return postDAO;
+	}
+	
+	public CommentDAO getCommentDAO() {
+		return commentDAO;
 	}
 }

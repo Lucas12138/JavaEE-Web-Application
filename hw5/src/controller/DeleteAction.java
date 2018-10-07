@@ -1,7 +1,9 @@
 package controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -10,9 +12,11 @@ import org.genericdao.RollbackException;
 import org.genericdao.Transaction;
 
 import controller.Action;
+import databean.CommentBean;
 import databean.PostBean;
 import databean.UserBean;
 import formbean.PostFormBean;
+import model.CommentDAO;
 import model.Model;
 import model.PostDAO;
 import model.UserDAO;
@@ -23,10 +27,12 @@ public class DeleteAction extends Action {
 
 	private UserDAO userDAO;
 	private PostDAO postDAO;
+	private CommentDAO commentDAO;
 
 	public DeleteAction(Model model) {
 		userDAO = model.getUserDAO();
 		postDAO = model.getPostDAO();
+		commentDAO = model.getCommentDAO();
 	}
 
 	@Override
@@ -41,30 +47,48 @@ public class DeleteAction extends Action {
 			// connection broken, back to login
 			return "login.do";
 		}
-		
+
 		List<String> errors = new ArrayList<String>();
 		request.setAttribute("errors", errors);
 
 		try {
 			String postIdStr = request.getParameter("postId");
+			String commentIdStr = request.getParameter("commentId");
 
 			// check null
-			if (postIdStr == null) {
-				errors.add("null postId found");
+			if (postIdStr == null && commentIdStr == null) {
+				errors.add("Not a valid delete action: missing postId and commentId");
 			}
 
-			long postId = Long.parseLong(postIdStr);
+			// TODO: consider transaction more here
+			if (postIdStr != null) {
+				long postId = Long.parseLong(postIdStr);
+				// use transaction on delete post to avoid race condition (comment on a post
+				// that has gone etc.)
+				Transaction.begin();
+				PostBean postFromDB = postDAO.read(postId);
+				if (postFromDB != null) {
+					postDAO.delete(postId);
+				}
+				Transaction.commit();
+			}
 
-			// use transaction on delete post to avoid race condition (comment on a post
-			// that has gone)
-			Transaction.begin();
-			postDAO.delete(postId);
-			Transaction.commit();
-			
+			if (commentIdStr != null) {
+				long commentId = Long.parseLong(commentIdStr);
+				// use transaction on delete comment to avoid race condition (comment on a post
+				// that has gone etc.)
+				Transaction.begin();
+				CommentBean commentFromDB = commentDAO.read(commentId);
+				if (commentFromDB != null) {
+					commentDAO.delete(commentId);
+				}
+				Transaction.commit();
+			}
+
 			// put the content in text area back
-			PostFormBean form = new PostFormBean(request);
-			request.setAttribute("form", form);
-			
+			PostFormBean postForm = new PostFormBean(request);
+			request.setAttribute("postForm", postForm);
+
 			// put the updated posts back
 			PostBean[] posts = postDAO.getPostsFromUser(user.getEmail());
 			request.setAttribute("posts", posts);
@@ -72,6 +96,24 @@ public class DeleteAction extends Action {
 			// put the users back
 			UserBean[] users = userDAO.getUsers();
 			request.setAttribute("users", users);
+
+			// map for adding comments under each related post
+			Map<Long, CommentBean[]> postIdToCommentsMap = new HashMap<>();
+			for (PostBean postsFromUser : posts) {
+				long postIdFromUser = postsFromUser.getPostId();
+				CommentBean[] commentsFromPostId = commentDAO.getCommentsFromPost(postIdFromUser);
+				postIdToCommentsMap.put(postIdFromUser, commentsFromPostId);
+			}
+			request.setAttribute("postIdToCommentsMap", postIdToCommentsMap);
+
+			// map email to user full name, easier for comment creation
+			Map<String, String> emailToFullNameMap = new HashMap<>();
+			for (UserBean userExisting : users) {
+				emailToFullNameMap.put(userExisting.getEmail(),
+						userExisting.getFirstName() + " " + userExisting.getLastName());
+			}
+			request.setAttribute("emailToFullNameMap", emailToFullNameMap);
+
 			return "home.jsp";
 		} catch (RollbackException e) {
 			errors.add(e.getMessage());

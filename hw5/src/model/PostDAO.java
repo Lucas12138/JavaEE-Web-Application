@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import org.genericdao.ConnectionPool;
 import org.genericdao.DAOException;
 import org.genericdao.GenericDAO;
+import org.genericdao.MatchArg;
 import org.genericdao.RollbackException;
 
 import databean.PostBean;
@@ -17,17 +18,10 @@ public class PostDAO extends GenericDAO<PostBean> {
 	}
 
 	public PostBean[] getPostsFromUser(String email) throws RollbackException {
-		// empty match to fetch all beans
-		PostBean[] posts = match();
-		
-		// filter only posts of the specific user
-		List<PostBean> postsFiltered = Arrays.stream(posts).filter(post -> post.getEmail().equals(email)).collect(Collectors.toList());
-		
-		// sort based on post datetime
-		PostBean[] postsFilteredSorted = new PostBean[postsFiltered.size()];
-		postsFilteredSorted = postsFiltered.toArray(postsFilteredSorted);
-		Arrays.sort(postsFilteredSorted);
-		
-		return postsFilteredSorted;
+		// match the email
+		PostBean[] posts = match(MatchArg.equals("email", email));
+		// sort the posts
+		Arrays.sort(posts);
+		return posts;
 	}
 }
