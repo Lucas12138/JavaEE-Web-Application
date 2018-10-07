@@ -17,9 +17,7 @@
 						home.do
 					</c:otherwise>
 				</c:choose>>
-				<c:set var="userEmail" value="${ usersIter.email }"
-					scope="session" />
-				${ usersIter.email }
+				<input type="hidden" name="userEmail" value="${ usersIter.email }" />
 				<button class="nav-link text-white-50"
 					style="background-color: transparent; border: transparent;"
 					type="submit">${usersIter.firstName} ${usersIter.lastName}</button>

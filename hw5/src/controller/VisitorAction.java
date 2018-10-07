@@ -57,7 +57,7 @@ public class VisitorAction extends Action {
 		request.setAttribute("errors", errors);
 
 		try {
-			String userEmail = (String) session.getAttribute("userEmail");
+			String userEmail = request.getParameter("userEmail");
 			UserBean userSelected = null;
 			if (userEmail != null) {
 				userSelected = userDAO.read(userEmail);

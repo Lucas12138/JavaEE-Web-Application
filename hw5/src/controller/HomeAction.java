@@ -124,7 +124,7 @@ public class HomeAction extends Action {
 			} 
 			request.setAttribute("emailToFullNameMap", emailToFullNameMap);
 			
-			String userEmail = (String) session.getAttribute("userEmail");
+			String userEmail = request.getParameter("userEmail");
 			if (userEmail != null) {
 				UserBean userSelected = userDAO.read(userEmail);
 				request.setAttribute("userSelected", userSelected);

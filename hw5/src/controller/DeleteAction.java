@@ -92,7 +92,7 @@ public class DeleteAction extends Action {
 
 			
 			
-			String userEmail = (String) session.getAttribute("userEmail");
+			String userEmail = request.getParameter("userEmail");
 			UserBean userSelected = null;
 			if (userEmail != null) {
 				userSelected = userDAO.read(userEmail);

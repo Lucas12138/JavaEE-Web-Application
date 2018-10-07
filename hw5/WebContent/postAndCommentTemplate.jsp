@@ -12,8 +12,7 @@
 					<input type="hidden" name="postId" value="${ post.postId }" /> <input
 						type="hidden" name="requestURIFromPostCommentTemplate"
 						value="${pageContext.request.requestURI}" />
-					<c:set var="userEmail" value="${ userSelected.email }"
-						scope="session" />
+					<input type="hidden" name="userEmail" value="${ userSelected.email }" />
 					<button type="submit" class="close" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
@@ -37,8 +36,7 @@
 								value="${ comment.commentId }" /> <input type="hidden"
 								name="requestURIFromPostCommentTemplate"
 								value="${pageContext.request.requestURI}" />
-							<c:set var="userEmail" value="${ userSelected.email }"
-								scope="session" />
+							<input type="hidden" name="userEmail" value="${ userSelected.email }" />
 							<button type="submit" class="close" aria-label="Close">
 								<span aria-hidden="true">&times;</span>
 							</button>
@@ -80,8 +78,7 @@
 								visitor.do
 							</c:otherwise>
 						</c:choose>>
-				<c:set var="userEmail" value="${ userSelected.email }"
-					scope="session" />
+				<input type="hidden" name="userEmail" value="${ userSelected.email }" />
 				<input type="hidden" name="postId" value="${ post.postId }" /> <input
 					type="text" class="form-control w-50" name="comment" value="">
 				<input class="btn btn-secondary" type="submit" name="button"
