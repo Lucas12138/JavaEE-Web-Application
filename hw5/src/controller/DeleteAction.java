@@ -1,6 +1,7 @@
 package controller;
 
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -89,8 +90,19 @@ public class DeleteAction extends Action {
 			PostFormBean postForm = new PostFormBean(request);
 			request.setAttribute("postForm", postForm);
 
+			
+			
+			String userEmail = (String) session.getAttribute("userEmail");
+			UserBean userSelected = null;
+			if (userEmail != null) {
+				userSelected = userDAO.read(userEmail);
+				request.setAttribute("userSelected", userSelected);
+			}
+			
+			
 			// put the updated posts back
-			PostBean[] posts = postDAO.getPostsFromUser(user.getEmail());
+			// if userSelected is null, it's from home page
+			PostBean[] posts = postDAO.getPostsFromUser((userSelected != null) ? userSelected.getEmail() : user.getEmail());
 			request.setAttribute("posts", posts);
 
 			// put the users back
@@ -114,14 +126,32 @@ public class DeleteAction extends Action {
 			}
 			request.setAttribute("emailToFullNameMap", emailToFullNameMap);
 
-			return "home.jsp";
+			return getNextPage(request, errors);
 		} catch (RollbackException e) {
 			errors.add(e.getMessage());
-			return "home.jsp";
+			return getNextPage(request, errors);
 		} catch (Exception e) {
 			errors.add(e.getMessage());
-			return "home.jsp";
+			return getNextPage(request, errors);
 		}
 	}
 
+	/**
+	 * forward to the correct page
+	 */
+	private String getNextPage(HttpServletRequest request, List<String> errors) {
+		if (errors.size() > 0) {
+			return "action-error-message.jsp";
+		}
+		
+		String requestURI = request.getParameter("requestURIFromPostCommentTemplate");
+		if (requestURI != null && requestURI.contains("home")) {
+			return "home.jsp";
+		}
+		if (requestURI != null && requestURI.contains("visitor")) {
+			return "visitor.jsp";
+		}
+		return "action-error-message.jsp";
+	}
+	
 }

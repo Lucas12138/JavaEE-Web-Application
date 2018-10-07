@@ -57,7 +57,7 @@ public class HomeAction extends Action {
 			// connection broken, back to login
 			return "login.do";
 		}
-
+		
 		List<String> errors = new ArrayList<String>();
 		request.setAttribute("errors", errors);
 
@@ -124,7 +124,7 @@ public class HomeAction extends Action {
 			} 
 			request.setAttribute("emailToFullNameMap", emailToFullNameMap);
 			
-			String userEmail = request.getParameter("userEmail");
+			String userEmail = (String) session.getAttribute("userEmail");
 			if (userEmail != null) {
 				UserBean userSelected = userDAO.read(userEmail);
 				request.setAttribute("userSelected", userSelected);

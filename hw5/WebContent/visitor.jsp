@@ -100,14 +100,7 @@
 					</c:choose>
 
 				</h2>
-				<c:choose>
-					<c:when test="${ (empty user) }">
-						<jsp:include page="visitorLogoutStatus.jsp" />
-					</c:when>
-					<c:otherwise>
-						<jsp:include page="visitorLoginStatus.jsp" />
-					</c:otherwise>
-				</c:choose>
+				<jsp:include page="postAndCommentTemplate.jsp" />
 			</div>
 		</div>
 	</div>

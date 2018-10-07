@@ -80,62 +80,9 @@
 					</h2>
 
 					<!-- JSTL -->
-					<c:if test="${!(empty posts)}">
-						<c:forEach var="post" items="${posts}">
-							<div class="row" style="margin-left: 20px; margin-bottom: 5px;">
-								<form class="delete-form" method="POST" action="delete.do">
-									<input type="hidden" name="postId" value="${ post.postId }" />
-									<button type="submit" class="close" aria-label="Close">
-										<span aria-hidden="true">&times;</span>
-									</button>
-								</form>
-								<!-- sanitize the content -->
-								<c:out value="${post.content}"></c:out>
-								--
-								<fmt:formatDate value="${post.postDatetime}" type="both"
-									pattern="MMM-dd-yyyy  h:mm aa" />
-							</div>
+					<jsp:include page="postAndCommentTemplate.jsp" />
 
-
-							<c:if test="${!(empty postIdToCommentsMap)}">
-								<c:forEach var="comment"
-									items="${postIdToCommentsMap[post.postId]}">
-									<div class="row"
-										style="margin-left: 40px; margin-bottom: 10px;">
-										<c:if test="${comment.email == user.email}">
-											<form class="delete-form" method="POST" action="delete.do">
-												<input type="hidden" name="commentId"
-													value="${ comment.commentId }" />
-												<button type="submit" class="close" aria-label="Close">
-													<span aria-hidden="true">&times;</span>
-												</button>
-											</form>
-										</c:if>
-										Comment by ${emailToFullNameMap[comment.email]} -
-										<!-- sanitize the content -->
-										<c:out value="${comment.content}"></c:out>
-										--
-										<fmt:formatDate value="${comment.commentDatetime}" type="both"
-											pattern="MMM-dd-yyyy  h:mm aa" />
-									</div>
-								</c:forEach>
-
-							</c:if>
-
-							<div class="form-inline"
-								style="margin-left: 40px; margin-bottom: 10px;">
-								<form method="POST" action="home.do">
-									<input type="hidden" name="postId" value="${ post.postId }" />
-									<input type="text" class="form-control w-50" name="comment"
-										value=""> <input class="btn btn-secondary"
-										type="submit" name="button" style="margin-left: 10px;"
-										value="Comment">
-								</form>
-							</div>
-						</c:forEach>
-					</c:if>
-
-
+					<!-- new post -->
 					<div style="margin-left: 40px; margin-top: 30px;">
 						<label>New Post:</label>
 						<form method="POST" action="home.do">
@@ -146,7 +93,7 @@
 						</form>
 					</div>
 
-					<!-- JSTL -->
+					<!-- errors -->
 					<c:if test="${!(empty errors)}">
 						<c:forEach var="error" items="${errors}">
 							<h3 style="color: red; margin-left: 40px;">${error}</h3>
