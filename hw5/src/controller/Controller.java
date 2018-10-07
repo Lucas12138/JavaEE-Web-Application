@@ -56,13 +56,17 @@ public class Controller extends HttpServlet {
             return Action.perform(action, request);
         }
         
-        // If the user hasn't logged in, login is the only option
+        // If the user hasn't logged in
         if (action.equals("login.do")) {
             return Action.perform("login.do", request);
         }
         
         if (action.equals("register.do")) {
         	return Action.perform("register.do", request);
+        }
+        
+        if (action.equals("visitor.do")) {
+        	return Action.perform("visitor.do", request);
         }
         
         // The not-logged user is trying to execute an action other

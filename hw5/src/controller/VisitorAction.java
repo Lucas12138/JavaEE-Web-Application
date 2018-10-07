@@ -41,10 +41,20 @@ public class VisitorAction extends Action {
         request.setAttribute("errors", errors);
 
         try {
-            request.setAttribute("users", userDAO.getUsers());
+            UserBean[] users = userDAO.getUsers();
+        	request.setAttribute("users", users);
+        	
+        	String userIndex = request.getParameter("userIndex");
+        	UserBean userSelected = users[Integer.parseInt(userIndex)];
+        	
+            request.setAttribute("users", users);
+            request.setAttribute("userSelected", userSelected);
             return "visitor.jsp";
         } catch (RollbackException e) {
             errors.add(e.getMessage());
+            return "visitor.jsp";
+        } catch (Exception e) {
+        	errors.add(e.getMessage());
             return "visitor.jsp";
         }
 	}
@@ -52,16 +62,4 @@ public class VisitorAction extends Action {
 	public String performPost(HttpServletRequest request) {
 		return performGet(request);
 	}
-	
-
-    public void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        doGet(request, response);
-    }
-
-    public void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-
-        
-    }
 }

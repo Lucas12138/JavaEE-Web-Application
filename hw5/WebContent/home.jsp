@@ -1,4 +1,4 @@
-<%@page import="databean.UserBean"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!doctype html>
 <html lang="en">
 <head>
@@ -33,14 +33,14 @@
 				<nav class="navbar bg-dark h-75">
 					<ul class="navbar-nav">
 						<p class="text-white">
-							<%
-								UserBean userBean = (UserBean) session.getAttribute("user");
-								if (userBean != null) {
-									out.print("Welcome, " + userBean.getFirstName() + " " + userBean.getLastName());
-								} else {
-									out.print("???");
-								}
-							%>
+							<c:choose>
+								<c:when test="${ (empty user) }">
+									???
+								</c:when>
+								<c:otherwise>
+									Welcome, ${user.firstName} ${user.lastName}
+								</c:otherwise>
+							</c:choose>
 						</p>
 						<li class="nav-item">
 							<form method="POST" action="home.do">
@@ -65,13 +65,15 @@
 				<h1 class="text-white-50 bg-dark display-1 w-100 h-25 text-center"
 					style="margin-bottom: 0px;">Power Blog</h1>
 				<h2 class="text-center" style="margin-top: 15px;">
-					<%
-						if (userBean != null) {
-							out.print(userBean.getFirstName() + " " + userBean.getLastName() + "'s Home Page");
-						} else {
-							out.print("???");
-						}
-					%>
+					<c:choose>
+						<c:when test="${ (empty user) }">
+							???
+						</c:when>
+						<c:otherwise>
+							${user.firstName} ${user.lastName} 's Home Page
+						</c:otherwise>
+					</c:choose>
+
 				</h2>
 				<div class="row" style="margin-left: 20px; margin-bottom: 5px;">
 					<button type="button" class="close" aria-label="Close">

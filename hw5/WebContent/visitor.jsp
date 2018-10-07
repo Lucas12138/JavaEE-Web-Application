@@ -1,4 +1,4 @@
-<%@page import="databean.UserBean"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!doctype html>
 <html lang="en">
 <head>
@@ -33,52 +33,54 @@
 				<nav class="navbar bg-dark h-75">
 					<ul class="navbar-nav">
 						<p class="text-white">
-							<%
-								UserBean userBean = (UserBean) session.getAttribute("user");
-								if (userBean != null) {
-									out.print("Welcome, " + userBean.getFirstName() + " " + userBean.getLastName());
-								} else {
-									out.print("Hi, visitor");
-								}
-							%>
+
+							<!-- JSTL -->
+							<c:choose>
+								<c:when test="${ (empty user) }">
+									Hi, visitor
+								</c:when>
+								<c:otherwise>
+									Welcome, ${user.firstName} ${user.lastName}
+								</c:otherwise>
+							</c:choose>
+
 						</p>
-						<%
-							if (userBean == null) {
-						%>
-						<li class="nav-item">
-							<form method="GET" action="login.do">
-								<button class="nav-link text-white-50"
-									style="background-color: transparent; border: transparent;"
-									type="submit">Login</button>
-							</form>
-						</li>
-						<li class="nav-item">
-							<form method="GET" action="register.do">
-								<button class="nav-link text-white-50"
-									style="background-color: transparent; border: transparent;"
-									type="submit">Register</button>
-							</form>
-						</li>
-						<%
-							} else {
-						%>
-						<li class="nav-item">
-							<form method="POST" action="home.do">
-								<button class="nav-link text-white-50"
-									style="background-color: transparent; border: transparent;"
-									type="submit">Home</button>
-							</form>
-						</li>
-						<li class="nav-item">
-							<form method="POST" action="logout.do">
-								<button class="nav-link text-white-50"
-									style="background-color: transparent; border: transparent;"
-									type="submit">Logout</button>
-							</form>
-						</li>
-						<%
-							}
-						%>
+
+						<c:choose>
+							<c:when test="${ (empty user) }">
+								<li class="nav-item">
+									<form method="GET" action="login.do">
+										<button class="nav-link text-white-50"
+											style="background-color: transparent; border: transparent;"
+											type="submit">Login</button>
+									</form>
+								</li>
+								<li class="nav-item">
+									<form method="GET" action="register.do">
+										<button class="nav-link text-white-50"
+											style="background-color: transparent; border: transparent;"
+											type="submit">Register</button>
+									</form>
+								</li>
+							</c:when>
+							<c:otherwise>
+								<li class="nav-item">
+									<form method="POST" action="home.do">
+										<button class="nav-link text-white-50"
+											style="background-color: transparent; border: transparent;"
+											type="submit">Home</button>
+									</form>
+								</li>
+								<li class="nav-item">
+									<form method="POST" action="logout.do">
+										<button class="nav-link text-white-50"
+											style="background-color: transparent; border: transparent;"
+											type="submit">Logout</button>
+									</form>
+								</li>
+							</c:otherwise>
+						</c:choose>
+
 						<hr>
 						<jsp:include page="userTemplate.jsp" />
 					</ul>
@@ -88,32 +90,24 @@
 				<h1 class="text-white-50 bg-dark display-1 w-100 h-25 text-center"
 					style="margin-bottom: 0px;">Power Blog</h1>
 				<h2 class="text-center" style="margin-top: 15px;">
-					<%
-						UserBean[] users = (UserBean[]) request.getAttribute("users");
-						String userIndex = request.getParameter("userIndex");
-						String pageTitle = "Somebody's Home Page";
-						if (userIndex != null) {
-							try {
-								int index = Integer.parseInt(userIndex);
-								pageTitle = users[index].getFirstName() + " " + users[index].getLastName() + "'s Home Page";
-							} catch (Exception e) {
-								pageTitle = "Somebody's Home Page";
-							}
-						}
-						out.println(pageTitle);
-					%>
+					<c:choose>
+						<c:when test="${ (empty userSelected) }">
+							Somebody's Home Page
+						</c:when>
+						<c:otherwise>
+							${userSelected.firstName} ${userSelected.lastName}'s Home Page 
+						</c:otherwise>
+					</c:choose>
+
 				</h2>
-				<%
-					if (userBean != null) {
-				%>
-				<jsp:include page="visitorLoginStatus.jsp" />
-				<%
-					} else {
-				%>
-				<jsp:include page="visitorLogoutStatus.jsp" />
-				<%
-					}
-				%>
+				<c:choose>
+					<c:when test="${ (empty user) }">
+						<jsp:include page="visitorLogoutStatus.jsp" />
+					</c:when>
+					<c:otherwise>
+						<jsp:include page="visitorLoginStatus.jsp" />
+					</c:otherwise>
+				</c:choose>
 			</div>
 		</div>
 	</div>

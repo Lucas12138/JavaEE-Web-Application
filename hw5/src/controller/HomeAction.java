@@ -47,12 +47,23 @@ public class HomeAction extends Action {
 
         List<String> errors = new ArrayList<String>();
         request.setAttribute("errors", errors);
+        
 
         try {
-            request.setAttribute("users", userDAO.getUsers());
+        	UserBean[] users = userDAO.getUsers();
+        	request.setAttribute("users", users);
+        	
+        	String userIndex = request.getParameter("userIndex");
+        	UserBean userSelected = users[Integer.parseInt(userIndex)];
+        	
+            request.setAttribute("users", users);
+            request.setAttribute("userSelected", userSelected);
             return "home.jsp";
         } catch (RollbackException e) {
             errors.add(e.getMessage());
+            return "home.jsp";
+        } catch (Exception e) {
+        	errors.add(e.getMessage());
             return "home.jsp";
         }
 		

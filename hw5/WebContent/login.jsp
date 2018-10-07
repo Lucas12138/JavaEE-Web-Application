@@ -1,4 +1,4 @@
-<%@page import="java.util.List"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!doctype html>
 <html lang="en">
 <head>
@@ -69,18 +69,13 @@
 					<input class="btn btn-secondary" type="submit" name="button"
 						value="Login">
 				</form>
-				<%
-					List<String> errors = (List<String>) request.getAttribute("errors");
-					if (errors != null) {
-						for (String error : errors) {
-				%>
-				<h3 style="color: red; margin-left: 100px;">
-					<%=error%>
-				</h3>
-				<%
-					}
-					}
-				%>
+
+				<!-- JSTL -->
+				<c:if test="${!(empty errors)}">
+					<c:forEach var="error" items="${errors}">
+						<h3 style="color: red; margin-left: 100px;">${error}</h3>
+					</c:forEach>
+				</c:if>
 			</div>
 		</div>
 	</div>
