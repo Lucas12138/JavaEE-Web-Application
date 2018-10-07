@@ -9,19 +9,27 @@ import org.genericdao.DAOException;
 
 public class Model {
 	private UserDAO userDAO;
+	private PostDAO postDAO;
 
 	public Model(ServletConfig config) throws ServletException {
 		try {
 			String jdbcDriver = config.getInitParameter("jdbcDriverName");
-			String jdbcURL    = config.getInitParameter("jdbcURL");
-			
-			ConnectionPool pool = new ConnectionPool(jdbcDriver,jdbcURL);
-			
-			userDAO  = new UserDAO(pool, "zizhel_user");
+			String jdbcURL = config.getInitParameter("jdbcURL");
+
+			ConnectionPool pool = new ConnectionPool(jdbcDriver, jdbcURL);
+
+			userDAO = new UserDAO(pool, "zizhel_user");
+			postDAO = new PostDAO(pool, "zizhel_post");
 		} catch (DAOException e) {
 			throw new ServletException(e);
 		}
 	}
-	
-	public UserDAO getUserDAO()  { return userDAO; }
+
+	public UserDAO getUserDAO() {
+		return userDAO;
+	}
+
+	public PostDAO getPostDAO() {
+		return postDAO;
+	}
 }

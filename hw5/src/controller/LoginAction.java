@@ -34,6 +34,7 @@ public class LoginAction extends Action {
         userDAO = model.getUserDAO();
     }
 
+    @Override
     public String getName() {
         return "login.do";
     }

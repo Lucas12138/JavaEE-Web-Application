@@ -31,6 +31,7 @@ public class VisitorAction extends Action {
 		userDAO = model.getUserDAO();
 	}
 
+	@Override
 	public String getName() {
 		return "visitor.do";
 	}

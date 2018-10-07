@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"  %>
 <!doctype html>
 <html lang="en">
 <head>
@@ -75,37 +76,41 @@
 					</c:choose>
 
 				</h2>
-				<div class="row" style="margin-left: 20px; margin-bottom: 5px;">
-					<button type="button" class="close" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-					J2EE is a good course! -- 9/15/2018 11:12am
-				</div>
-				<div class="row" style="margin-left: 40px; margin-bottom: 10px;">
-					<button type="button" class="close" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-					Comment by Donald Trump - We need more money to build the wall.
-					9/15/2018 12:12am
-				</div>
-				<div class="row" style="margin-left: 20px; margin-bottom: 5px;">
-					<button type="button" class="close" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-					Hello world! 9/15/2018 13:11am
-				</div>
-				<div class="row" style="margin-left: 40px; margin-bottom: 10px;">
-					<button type="button" class="close" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-					Comment by Lucas Liu - Let's get it started! 9/15/2018 14:01am
-				</div>
+				
+				<!-- JSTL -->
+				<c:if test="${!(empty posts)}">
+					<c:forEach var="post" items="${posts}">
+						<div class="row" style="margin-left: 20px; margin-bottom: 5px;">
+							<form class="delete-form" method="POST" action="delete.do">
+			                    <input type="hidden" name="postId" value="${ post.postId }" />
+			                    <button type="submit" class="close" aria-label="Close">
+			                    	<span aria-hidden="true">&times;</span>
+			                    </button>
+			                </form>
+							<!-- sanitize the content -->
+							<c:out value="${post.content}"></c:out> -- 
+							<fmt:formatDate value="${post.postDatetime}" type="both" pattern="MMM-dd-yyyy  h:mm aa"/>
+						</div>
+					</c:forEach>
+				</c:if>
+				
 
 				<div style="margin-left: 40px; margin-top: 30px;">
 					<label for="comment">New Post:</label>
-					<textarea class="form-control w-50" rows="5" id="comment"></textarea>
-					<a class="btn btn-secondary text-white" style="margin-top: 20px;">Submit</a>
+					<form method="POST" action="home.do">
+					<textarea class="form-control w-50" rows="5" name="post" value="${form.postContent}"></textarea>
+					<input class="btn btn-secondary" type="submit" name="button" style="margin-top: 20px;"
+						value="Submit">
+					<form>
 				</div>
+				
+				<!-- JSTL -->
+				<c:if test="${!(empty errors)}">
+					<c:forEach var="error" items="${errors}">
+						<h3 style="color: red; margin-left: 40px;">${error}</h3>
+					</c:forEach>
+				</c:if>
+				
 			</div>
 		</div>
 	</div>

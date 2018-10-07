@@ -20,6 +20,7 @@ public class LogoutAction extends Action {
     	
     }
     
+    @Override
     public String getName() {
         return "logout.do";
     }

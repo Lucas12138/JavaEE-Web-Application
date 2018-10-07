@@ -32,6 +32,7 @@ public class RegisterAction extends Action {
 		userDAO = model.getUserDAO();
 	}
 
+	@Override
 	public String getName() {
 		return "register.do";
 	}
