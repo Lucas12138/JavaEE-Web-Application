@@ -37,7 +37,7 @@ public class HomeAction extends Action {
 	private UserDAO userDAO;
 	private PostDAO postDAO;
 	private CommentDAO commentDAO;
-	
+
 	public HomeAction(Model model) {
 		userDAO = model.getUserDAO();
 		postDAO = model.getPostDAO();
@@ -57,7 +57,7 @@ public class HomeAction extends Action {
 			// connection broken, back to login
 			return "login.do";
 		}
-		
+
 		List<String> errors = new ArrayList<String>();
 		request.setAttribute("errors", errors);
 
@@ -78,10 +78,10 @@ public class HomeAction extends Action {
 					postDAO.create(post);
 				}
 			}
-			
+
 			// check if there's an incoming new comment request
 			CommentFormBean commentForm = new CommentFormBean(request);
-			
+
 			if (commentForm.isNewComment()) {
 				errors.addAll(commentForm.getValidationErrors());
 				String postIdStr = request.getParameter("postId");
@@ -89,7 +89,7 @@ public class HomeAction extends Action {
 					errors.add("The post you want to comment on is somehow missing");
 				}
 				long postId = Long.parseLong(postIdStr);
-				
+
 				// do this only if no errors
 				if (errors.size() == 0) {
 					// create new comment in db
@@ -101,7 +101,7 @@ public class HomeAction extends Action {
 					commentDAO.create(commentBean);
 				}
 			}
-			
+
 			PostBean[] posts = postDAO.getPostsFromUser(user.getEmail());
 			request.setAttribute("posts", posts);
 
@@ -109,27 +109,19 @@ public class HomeAction extends Action {
 			request.setAttribute("users", users);
 
 			// map for adding comments under each related post
-			Map<Long, CommentBean[]> postIdToCommentsMap = new HashMap<>();
-			for (PostBean postsFromUser : posts) {
-				long postIdFromUser = postsFromUser.getPostId();
-				CommentBean[] commentsFromPostId = commentDAO.getCommentsFromPost(postIdFromUser);
-				postIdToCommentsMap.put(postIdFromUser, commentsFromPostId);
-			} 
+			Map<Long, CommentBean[]> postIdToCommentsMap = commentDAO.getPostIdToCommentsMap(posts);
 			request.setAttribute("postIdToCommentsMap", postIdToCommentsMap);
-			
+
 			// map email to user full name, easier for comment creation
-			Map<String, String> emailToFullNameMap = new HashMap<>();
-			for (UserBean userExisting : users) {
-				emailToFullNameMap.put(userExisting.getEmail(), userExisting.getFirstName() + " " + userExisting.getLastName());
-			} 
+			Map<String, String> emailToFullNameMap = userDAO.getEmailToFullNameMap(users);
 			request.setAttribute("emailToFullNameMap", emailToFullNameMap);
-			
+
 			String userEmail = request.getParameter("userEmail");
 			if (userEmail != null) {
 				UserBean userSelected = userDAO.read(userEmail);
 				request.setAttribute("userSelected", userSelected);
 			}
-			
+
 			return "home.jsp";
 		} catch (RollbackException e) {
 			errors.add(e.getMessage());

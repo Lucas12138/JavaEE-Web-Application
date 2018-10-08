@@ -52,7 +52,7 @@ public class VisitorAction extends Action {
 	public String performGet(HttpServletRequest request) {
 		HttpSession session = request.getSession();
 		UserBean user = (UserBean) session.getAttribute("user");
-		
+
 		List<String> errors = new ArrayList<String>();
 		request.setAttribute("errors", errors);
 
@@ -95,20 +95,11 @@ public class VisitorAction extends Action {
 			request.setAttribute("users", users);
 
 			// map for adding comments under each related post
-			Map<Long, CommentBean[]> postIdToCommentsMap = new HashMap<>();
-			for (PostBean postsFromUser : posts) {
-				long postIdFromUser = postsFromUser.getPostId();
-				CommentBean[] commentsFromPostId = commentDAO.getCommentsFromPost(postIdFromUser);
-				postIdToCommentsMap.put(postIdFromUser, commentsFromPostId);
-			}
+			Map<Long, CommentBean[]> postIdToCommentsMap = commentDAO.getPostIdToCommentsMap(posts);
 			request.setAttribute("postIdToCommentsMap", postIdToCommentsMap);
 
 			// map email to user full name, easier for comment creation
-			Map<String, String> emailToFullNameMap = new HashMap<>();
-			for (UserBean userExisting : users) {
-				emailToFullNameMap.put(userExisting.getEmail(),
-						userExisting.getFirstName() + " " + userExisting.getLastName());
-			}
+			Map<String, String> emailToFullNameMap = userDAO.getEmailToFullNameMap(users);
 			request.setAttribute("emailToFullNameMap", emailToFullNameMap);
 
 			return "visitor.jsp";

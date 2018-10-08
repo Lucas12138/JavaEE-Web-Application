@@ -61,11 +61,9 @@ public class DeleteAction extends Action {
 				errors.add("Not a valid delete action: missing postId and commentId");
 			}
 
-			// TODO: consider transaction more here
 			if (postIdStr != null) {
 				long postId = Long.parseLong(postIdStr);
-				// use transaction on delete post to avoid race condition (comment on a post
-				// that has gone etc.)
+				// use transaction on delete post to avoid race condition
 				Transaction.begin();
 				PostBean postFromDB = postDAO.read(postId);
 				if (postFromDB != null) {
@@ -76,8 +74,7 @@ public class DeleteAction extends Action {
 
 			if (commentIdStr != null) {
 				long commentId = Long.parseLong(commentIdStr);
-				// use transaction on delete comment to avoid race condition (comment on a post
-				// that has gone etc.)
+				// use transaction on delete comment to avoid race condition
 				Transaction.begin();
 				CommentBean commentFromDB = commentDAO.read(commentId);
 				if (commentFromDB != null) {
@@ -90,19 +87,17 @@ public class DeleteAction extends Action {
 			PostFormBean postForm = new PostFormBean(request);
 			request.setAttribute("postForm", postForm);
 
-			
-			
 			String userEmail = request.getParameter("userEmail");
 			UserBean userSelected = null;
 			if (userEmail != null) {
 				userSelected = userDAO.read(userEmail);
 				request.setAttribute("userSelected", userSelected);
 			}
-			
-			
+
 			// put the updated posts back
 			// if userSelected is null, it's from home page
-			PostBean[] posts = postDAO.getPostsFromUser((userSelected != null) ? userSelected.getEmail() : user.getEmail());
+			PostBean[] posts = postDAO
+					.getPostsFromUser((userSelected != null) ? userSelected.getEmail() : user.getEmail());
 			request.setAttribute("posts", posts);
 
 			// put the users back
@@ -110,20 +105,11 @@ public class DeleteAction extends Action {
 			request.setAttribute("users", users);
 
 			// map for adding comments under each related post
-			Map<Long, CommentBean[]> postIdToCommentsMap = new HashMap<>();
-			for (PostBean postsFromUser : posts) {
-				long postIdFromUser = postsFromUser.getPostId();
-				CommentBean[] commentsFromPostId = commentDAO.getCommentsFromPost(postIdFromUser);
-				postIdToCommentsMap.put(postIdFromUser, commentsFromPostId);
-			}
+			Map<Long, CommentBean[]> postIdToCommentsMap = commentDAO.getPostIdToCommentsMap(posts);
 			request.setAttribute("postIdToCommentsMap", postIdToCommentsMap);
 
 			// map email to user full name, easier for comment creation
-			Map<String, String> emailToFullNameMap = new HashMap<>();
-			for (UserBean userExisting : users) {
-				emailToFullNameMap.put(userExisting.getEmail(),
-						userExisting.getFirstName() + " " + userExisting.getLastName());
-			}
+			Map<String, String> emailToFullNameMap = userDAO.getEmailToFullNameMap(users);
 			request.setAttribute("emailToFullNameMap", emailToFullNameMap);
 
 			return getNextPage(request, errors);
@@ -133,6 +119,9 @@ public class DeleteAction extends Action {
 		} catch (Exception e) {
 			errors.add(e.getMessage());
 			return getNextPage(request, errors);
+		} finally {
+			if (Transaction.isActive())
+				Transaction.rollback();
 		}
 	}
 
@@ -143,7 +132,7 @@ public class DeleteAction extends Action {
 		if (errors.size() > 0) {
 			return "action-error-message.jsp";
 		}
-		
+
 		String requestURI = request.getParameter("requestURIFromPostCommentTemplate");
 		if (requestURI != null && requestURI.contains("home")) {
 			return "home.jsp";
@@ -153,5 +142,5 @@ public class DeleteAction extends Action {
 		}
 		return "action-error-message.jsp";
 	}
-	
+
 }
