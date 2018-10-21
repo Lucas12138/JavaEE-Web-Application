@@ -63,7 +63,8 @@ public class DeleteAction extends Action {
 				// use transaction on delete post to avoid race condition
 				Transaction.begin();
 				PostBean postFromDB = postDAO.read(postId);
-				if (postFromDB != null) {
+                // can only delete current user's post
+				if (postFromDB != null && postFromDB.getEmail().equals(user.getEmail())) {
 					// delete the potential stray comments (transaction is important here)
 					CommentBean[] commentsOfThePost = commentDAO.match(MatchArg.equals("postId", postId));
 					for (CommentBean commentBean : commentsOfThePost) {
@@ -75,13 +76,27 @@ public class DeleteAction extends Action {
 				Transaction.commit();
 			}
 
+            String userEmail = request.getParameter("userEmail");
+            UserBean userSelected = null;
+            if (userEmail != null) {
+                userSelected = userDAO.read(userEmail);
+                request.setAttribute("userSelected", userSelected);
+            }
+
 			if (commentIdStr != null) {
 				long commentId = Long.parseLong(commentIdStr);
 				// use transaction on delete comment to avoid race condition
 				Transaction.begin();
 				CommentBean commentFromDB = commentDAO.read(commentId);
+
 				if (commentFromDB != null) {
-					commentDAO.delete(commentId);
+                    // can delete user's comment no matter from visitor or home page
+					if (commentFromDB.getEmail().equals(user.getEmail())) {
+                        commentDAO.delete(commentId);
+                    // can delete everyone's comment if from home page ( <=> userEmail == null)
+					}else if (userEmail == null) {
+                        commentDAO.delete(commentId);
+                    }
 				}
 				Transaction.commit();
 			}
@@ -90,12 +105,6 @@ public class DeleteAction extends Action {
 			PostFormBean postForm = new PostFormBean(request);
 			request.setAttribute("postForm", postForm);
 
-			String userEmail = request.getParameter("userEmail");
-			UserBean userSelected = null;
-			if (userEmail != null) {
-				userSelected = userDAO.read(userEmail);
-				request.setAttribute("userSelected", userSelected);
-			}
 
 			// put the updated posts back
 			// if userSelected is null, it's from home page
