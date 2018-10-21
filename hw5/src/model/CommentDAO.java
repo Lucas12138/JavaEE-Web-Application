@@ -69,8 +69,9 @@ public class CommentDAO extends GenericDAO<CommentBean> {
 				commentBean.setContent(commentForm.getCommentContent());
 				commentBean.setEmail(user.getEmail());
 				commentBean.setPostId(postId);
-				create(commentBean);
+				this.create(commentBean);
 			}
+			Transaction.commit();
 		} catch (RollbackException e) {
 			errors.add(e.toString());
 		} catch (Exception e) {
