@@ -1,14 +1,11 @@
 package controller;
 
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.genericdao.MatchArg;
 import org.genericdao.RollbackException;
 import org.genericdao.Transaction;
 
@@ -67,6 +64,12 @@ public class DeleteAction extends Action {
 				Transaction.begin();
 				PostBean postFromDB = postDAO.read(postId);
 				if (postFromDB != null) {
+					// delete the potential stray comments (transaction is important here)
+					CommentBean[] commentsOfThePost = commentDAO.match(MatchArg.equals("postId", postId));
+					for (CommentBean commentBean : commentsOfThePost) {
+						commentDAO.delete(commentBean.getCommentId());
+					}
+
 					postDAO.delete(postId);
 				}
 				Transaction.commit();
