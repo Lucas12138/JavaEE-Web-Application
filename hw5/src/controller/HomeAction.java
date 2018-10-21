@@ -83,23 +83,8 @@ public class HomeAction extends Action {
 			CommentFormBean commentForm = new CommentFormBean(request);
 
 			if (commentForm.isNewComment()) {
-				errors.addAll(commentForm.getValidationErrors());
 				String postIdStr = request.getParameter("postId");
-				if (postIdStr == null) {
-					errors.add("The post you want to comment on is somehow missing");
-				}
-				long postId = Long.parseLong(postIdStr);
-
-				// do this only if no errors
-				if (errors.size() == 0) {
-					// create new comment in db
-					CommentBean commentBean = new CommentBean();
-					commentBean.setCommentDatetime(new Date());
-					commentBean.setContent(commentForm.getCommentContent());
-					commentBean.setEmail(user.getEmail());
-					commentBean.setPostId(postId);
-					commentDAO.create(commentBean);
-				}
+				commentDAO.createCommentOnPost(postIdStr, commentForm, user, postDAO, errors);
 			}
 
 			PostBean[] posts = postDAO.getPostsFromUser(user.getEmail());

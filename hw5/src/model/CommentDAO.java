@@ -1,16 +1,11 @@
 package model;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
-import org.genericdao.ConnectionPool;
-import org.genericdao.DAOException;
-import org.genericdao.GenericDAO;
-import org.genericdao.MatchArg;
-import org.genericdao.RollbackException;
+import databean.UserBean;
+import formbean.CommentFormBean;
+import org.genericdao.*;
 
 import databean.CommentBean;
 import databean.PostBean;
@@ -40,5 +35,51 @@ public class CommentDAO extends GenericDAO<CommentBean> {
 			postIdToCommentsMap.put(postIdFromUser, commentsFromPostId);
 		}
 		return postIdToCommentsMap;
+	}
+
+	/**
+	 * Use transaction to avoid adding a comment on a non-existing post
+	 * @param postIdStr
+	 * @param commentForm
+	 * @param user
+	 * @param postDAO
+	 * @param errors
+	 */
+	public void createCommentOnPost(String postIdStr, CommentFormBean commentForm, UserBean user, PostDAO postDAO, List<String> errors) {
+		try {
+			Transaction.begin();
+
+			errors.addAll(commentForm.getValidationErrors());
+			if (postIdStr == null) {
+				errors.add("The post you want to comment on is somehow missing");
+			}
+
+			// make sure the post exist (transaction is very important here)
+			long postId = Long.parseLong(postIdStr);
+			PostBean postBean = postDAO.read(postId);
+			if (postBean == null) {
+				errors.add("You're commenting on a post that doesn't exist");
+			}
+
+			// do this only if no errors
+			if (errors.size() == 0) {
+				// create new comment in db
+				CommentBean commentBean = new CommentBean();
+				commentBean.setCommentDatetime(new Date());
+				commentBean.setContent(commentForm.getCommentContent());
+				commentBean.setEmail(user.getEmail());
+				commentBean.setPostId(postId);
+				create(commentBean);
+			}
+		} catch (RollbackException e) {
+			errors.add(e.toString());
+		} catch (Exception e) {
+			errors.add(e.toString());
+		} finally {
+			if (Transaction.isActive()) {
+				Transaction.rollback();
+			}
+		}
+
 	}
 }
