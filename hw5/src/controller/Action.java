@@ -6,6 +6,12 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 public abstract class Action {
+
+    /**
+     * Class methods to manage dispatching to Actions
+     */
+    private static Map<String, Action> hash = new HashMap<String, Action>();
+
     /**
      * Returns the name of the action, used to match the request in the map
      * @return the name of the action
@@ -41,11 +47,6 @@ public abstract class Action {
                 "No implementation of performPost() for action " + getName());
         return "action-error-message.jsp";
     }
-
-    /**
-     * Class methods to manage dispatching to Actions
-     */
-    private static Map<String, Action> hash = new HashMap<String, Action>();
 
     /**
      * Adds an action to the map.

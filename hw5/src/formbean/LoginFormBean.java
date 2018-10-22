@@ -5,13 +5,13 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-public class LoginForm {
+public class LoginFormBean {
 
 	private String email;
 	private String password;
 	private String button;
 
-	public LoginForm(HttpServletRequest request) {
+	public LoginFormBean(HttpServletRequest request) {
 		email = request.getParameter("email");
 		password = request.getParameter("password");
 		button = request.getParameter("button");

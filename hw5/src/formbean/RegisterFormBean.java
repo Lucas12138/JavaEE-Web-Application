@@ -5,7 +5,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-public class RegisterForm {
+public class RegisterFormBean {
 
 	private String email;
 	private String password;
@@ -14,7 +14,7 @@ public class RegisterForm {
 	private String lastName;
 	private String button;
 
-	public RegisterForm(HttpServletRequest request) {
+	public RegisterFormBean(HttpServletRequest request) {
 		email = request.getParameter("email");
 		password = request.getParameter("password");
 		passwordConfirmed = request.getParameter("passwordConfirmed");

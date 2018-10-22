@@ -20,7 +20,7 @@ import org.genericdao.RollbackException;
 
 import databean.UserBean;
 import model.Model;
-import formbean.LoginForm;
+import formbean.LoginFormBean;
 import model.UserDAO;
 
 public class LoginAction extends Action {
@@ -53,7 +53,7 @@ public class LoginAction extends Action {
 		try {
 			request.setAttribute("users", userDAO.getUsers());
 
-			LoginForm form = new LoginForm(request);
+			LoginFormBean form = new LoginFormBean(request);
 			request.setAttribute("form", form);
 
 			// GET request on this page should avoid error messages

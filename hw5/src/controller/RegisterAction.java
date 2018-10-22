@@ -18,7 +18,7 @@ import org.genericdao.DAOException;
 import org.genericdao.RollbackException;
 
 import databean.UserBean;
-import formbean.RegisterForm;
+import formbean.RegisterFormBean;
 import model.Model;
 import model.UserDAO;
 
@@ -50,7 +50,7 @@ public class RegisterAction extends Action {
 		try {
 			request.setAttribute("users", userDAO.getUsers());
 
-			RegisterForm form = new RegisterForm(request);
+			RegisterFormBean form = new RegisterFormBean(request);
 			request.setAttribute("form", form);
 
 			// GET request on this page should avoid error messages
